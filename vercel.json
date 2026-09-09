@@ -27,7 +27,7 @@
       "destination": "/api/index"
     },
     {
-      "source": "/(.*)",
+      "source": "/((?!assets/|favicon.ico).*)",
       "destination": "/index.html"
     }
   ]
