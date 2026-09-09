@@ -29,9 +29,17 @@ export default function TransactionTypeView({ type, title, addLabel, description
     setError("");
     try {
       const data = await fetchTransactions({ type });
-      setTransactions([...data.transactions].reverse());
+      if (data && Array.isArray(data.transactions)) {
+        setTransactions([...data.transactions].reverse());
+      } else if (data && data.error) {
+        setError(data.error);
+        setTransactions([]);
+      } else {
+        setTransactions([]);
+      }
     } catch (err) {
       setError(err.message || "Could not load transactions.");
+      setTransactions([]);
     } finally {
       setLoading(false);
     }
@@ -52,16 +60,20 @@ export default function TransactionTypeView({ type, title, addLabel, description
   }
 
   async function handleSubmit(payload) {
-    if (editing) {
-      await updateTransaction(editing.id, payload);
-      showToast(`${title} entry updated.`);
-    } else {
-      await addTransaction(payload);
-      showToast(`${title} entry added.`);
+    try {
+      if (editing) {
+        await updateTransaction(editing.id, payload);
+        showToast(`${title} entry updated.`);
+      } else {
+        await addTransaction(payload);
+        showToast(`${title} entry added.`);
+      }
+      setModalOpen(false);
+      setEditing(null);
+      load();
+    } catch (err) {
+      showToast(err.message || "Operation failed.", "error");
     }
-    setModalOpen(false);
-    setEditing(null);
-    load();
   }
 
   async function confirmDelete() {
