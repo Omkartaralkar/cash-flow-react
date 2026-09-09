@@ -4,10 +4,11 @@ from storage import load_data, save_data, current_transactions
 from api_utils import login_required
 from excel_import import parse_workbook
 
-import_bp = Blueprint("import", __name__, url_prefix="/api/import")
+import_bp = Blueprint("import", __name__)
 
 
-@import_bp.route("/excel", methods=["POST"])
+@import_bp.route("/import/excel", methods=["POST"])
+@import_bp.route("/api/import/excel", methods=["POST"])
 @login_required
 def import_excel():
     if "file" not in request.files:

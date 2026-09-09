@@ -40,9 +40,12 @@ export default function Dashboard() {
           fetchDashboard(),
           fetchReports(),
         ]);
+
         if (!alive) return;
-        setDashboard(dashboardData);
-        setMonthly(reportsData.monthly || []);
+
+        // Defensive fallbacks to prevent crash if an endpoint returns null/undefined
+        setDashboard(dashboardData || null);
+        setMonthly((reportsData && reportsData.monthly) ? reportsData.monthly : []);
       } catch (err) {
         if (alive) setError(err.message || "Could not load the dashboard.");
       } finally {
@@ -60,34 +63,45 @@ export default function Dashboard() {
   if (error) return <EmptyState title="Couldn't load dashboard" description={error} />;
   if (!dashboard) return null;
 
-  const recent = [...dashboard.transactions].slice(-8).reverse();
+  const rawTransactions = Array.isArray(dashboard.transactions) ? dashboard.transactions : [];
+  const recent = [...rawTransactions].slice(-8).reverse();
   const peopleEntries = Object.entries(dashboard.people || {}).slice(0, 4);
 
-  const chartData = monthly.map((m) => ({
+  const safeMonthly = Array.isArray(monthly) ? monthly : [];
+
+  const chartData = safeMonthly.map((m) => ({
     month: monthLabel(m.month),
-    Income: m.income,
-    Expense: m.expense,
+    Income: m.income || 0,
+    Expense: m.expense || 0,
   }));
 
-  const givenReturnedData = monthly.map((m) => ({
+  const givenReturnedData = safeMonthly.map((m) => ({
     month: monthLabel(m.month),
-    Given: m.given,
-    Returned: m.returned,
+    Given: m.given || 0,
+    Returned: m.returned || 0,
   }));
+
+  const totals = dashboard.totals || {
+    income: { formatted: "₹0", words: "Zero" },
+    expense: { formatted: "₹0", words: "Zero" },
+    given: { formatted: "₹0", words: "Zero" },
+    returned: { formatted: "₹0", words: "Zero" },
+    current_given: { formatted: "₹0", words: "Zero" },
+  };
 
   return (
     <div className="page dashboard-page">
       <div className="dashboard-grid">
-        <BalanceCard balance={dashboard.balance} />
+        <BalanceCard balance={dashboard.balance || { formatted: "₹0", words: "Zero" }} />
 
         <div className="summary-grid">
-          <SummaryCard label="Income" money={dashboard.totals.income} tone="positive" icon="↓" />
-          <SummaryCard label="Expense" money={dashboard.totals.expense} tone="negative" icon="↑" />
-          <SummaryCard label="Given" money={dashboard.totals.given} tone="negative" icon="→" />
-          <SummaryCard label="Returned" money={dashboard.totals.returned} tone="positive" icon="←" />
+          <SummaryCard label="Income" money={totals.income} tone="positive" icon="↓" />
+          <SummaryCard label="Expense" money={totals.expense} tone="negative" icon="↑" />
+          <SummaryCard label="Given" money={totals.given} tone="negative" icon="→" />
+          <SummaryCard label="Returned" money={totals.returned} tone="positive" icon="←" />
           <SummaryCard
             label="Outstanding"
-            money={dashboard.totals.current_given}
+            money={totals.current_given}
             tone="neutral"
             icon="●"
           />

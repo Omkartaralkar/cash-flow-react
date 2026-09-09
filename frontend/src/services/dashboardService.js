@@ -1,5 +1,5 @@
 import { get } from "./api";
 
 export function fetchDashboard() {
-  return get("/dashboard");
+  return get("/api/dashboard");
 }

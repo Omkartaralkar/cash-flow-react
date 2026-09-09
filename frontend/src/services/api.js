@@ -6,9 +6,8 @@ async function parseBody(res) {
   try {
     return JSON.parse(text);
   } catch {
-    // If the server returned HTML (Vercel rewrite fallback), throw instead of returning null
     if (text.trim().startsWith("<")) {
-      throw new Error("API endpoint not found; received HTML instead of JSON.");
+      throw new Error("API route returned HTML instead of JSON. Ensure endpoint starts with /api/.");
     }
     return null;
   }
@@ -36,7 +35,37 @@ async function request(path, options = {}) {
   return data;
 }
 
-export const get = (path) => request(path);
-export const post = (path, body) => request(path, { method: "POST", body: JSON.stringify(body || {}) });
-export const put = (path, body) => request(path, { method: "PUT", body: JSON.stringify(body || {}) });
-export const del = (path) => request(path, { method: "DELETE" });
+export function get(path) {
+  return request(path);
+}
+
+export function post(path, body) {
+  return request(path, { method: "POST", body: JSON.stringify(body || {}) });
+}
+
+export function put(path, body) {
+  return request(path, { method: "PUT", body: JSON.stringify(body || {}) });
+}
+
+export function del(path) {
+  return request(path, { method: "DELETE" });
+}
+
+export async function upload(path, formData) {
+  const res = await fetch(BASE + path, {
+    method: "POST",
+    credentials: "include",
+    body: formData,
+  });
+
+  const data = await parseBody(res);
+
+  if (!res.ok) {
+    const message = (data && data.error) || "Upload failed.";
+    const error = new Error(message);
+    error.status = res.status;
+    throw error;
+  }
+
+  return data;
+}

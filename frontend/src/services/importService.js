@@ -1,7 +1,5 @@
 import { upload } from "./api";
 
-export function importExcel(file) {
-  const formData = new FormData();
-  formData.append("file", file);
-  return upload("/import/excel", formData);
+export function importExcel(formData) {
+  return upload("/api/import/excel", formData);
 }

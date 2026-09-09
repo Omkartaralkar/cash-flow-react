@@ -11,9 +11,7 @@ from helpers import (
     normalize_transaction,
 )
 
-transactions_bp = Blueprint(
-    "transactions", __name__, url_prefix="/api/transactions"
-)
+transactions_bp = Blueprint("transactions", __name__)
 
 VALID_TYPES = ("income", "expense", "given", "return")
 
@@ -29,19 +27,14 @@ def _serialize_row(row):
 
 
 def _parse_amount(raw_value):
-    """
-    Same rule as the original app: cast to float then to int, and it
-    must end up greater than zero.
-    """
     amount = int(float(raw_value))
-
     if amount <= 0:
         raise ValueError("Amount must be greater than zero.")
-
     return amount
 
 
-@transactions_bp.route("", methods=["GET"])
+@transactions_bp.route("/transactions", methods=["GET"])
+@transactions_bp.route("/api/transactions", methods=["GET"])
 @login_required
 def list_transactions():
     data = load_data()
@@ -49,12 +42,6 @@ def list_transactions():
 
     ledger, totals, _people = compute_ledger(transactions)
     rows = [_serialize_row(row) for row in ledger]
-
-    # ------------------------------------------------------------
-    # Optional filters - display-only, the running balance above is
-    # always computed against the full, unfiltered chronological
-    # ledger first, so filtering never changes any calculation.
-    # ------------------------------------------------------------
 
     type_filter = request.args.get("type")
     if type_filter and type_filter in VALID_TYPES:
@@ -84,7 +71,8 @@ def list_transactions():
     })
 
 
-@transactions_bp.route("", methods=["POST"])
+@transactions_bp.route("/transactions", methods=["POST"])
+@transactions_bp.route("/api/transactions", methods=["POST"])
 @login_required
 def add_transaction():
     payload = request.get_json(silent=True) or {}
@@ -127,7 +115,8 @@ def add_transaction():
     return jsonify({"ok": True, "id": new_id}), 201
 
 
-@transactions_bp.route("/<int:transaction_id>", methods=["GET"])
+@transactions_bp.route("/transactions/<int:transaction_id>", methods=["GET"])
+@transactions_bp.route("/api/transactions/<int:transaction_id>", methods=["GET"])
 @login_required
 def get_transaction(transaction_id):
     data = load_data()
@@ -142,7 +131,8 @@ def get_transaction(transaction_id):
     return jsonify(transaction)
 
 
-@transactions_bp.route("/<int:transaction_id>", methods=["PUT"])
+@transactions_bp.route("/transactions/<int:transaction_id>", methods=["PUT"])
+@transactions_bp.route("/api/transactions/<int:transaction_id>", methods=["PUT"])
 @login_required
 def update_transaction(transaction_id):
     data = load_data()
@@ -187,7 +177,8 @@ def update_transaction(transaction_id):
     return jsonify({"ok": True, "id": transaction_id})
 
 
-@transactions_bp.route("/<int:transaction_id>", methods=["DELETE"])
+@transactions_bp.route("/transactions/<int:transaction_id>", methods=["DELETE"])
+@transactions_bp.route("/api/transactions/<int:transaction_id>", methods=["DELETE"])
 @login_required
 def delete_transaction(transaction_id):
     data = load_data()
