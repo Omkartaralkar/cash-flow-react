@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Node / frontend build
+frontend/node_modules/
+frontend/dist/
+npm-debug.log*
+
+# Editors / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Data safety - keep the tracked data.json/users.json, but not every
+# timestamped backup pile-up
+data/backups/*
+!data/backups/.gitkeep

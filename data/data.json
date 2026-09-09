@@ -1,0 +1,1195 @@
+{
+    "balance": 0.0,
+    "transactions": [
+        {
+            "type": "income",
+            "amount": 800000.0,
+            "category": "amsf ",
+            "date": "2026-04-09"
+        },
+        {
+            "type": "income",
+            "amount": 1000000,
+            "category": "asasc",
+            "date": "2026-04-09",
+            "person": ""
+        }
+    ],
+    "Omkar": {
+        "transactions": []
+    },
+    "Swamiraj": {
+        "transactions": [
+            {
+                "date": "2025-04-24",
+                "name": "",
+                "reason": "",
+                "amount": 3000000.0,
+                "type": "income"
+            },
+            {
+                "date": "2025-04-24",
+                "name": "",
+                "reason": "",
+                "amount": 970000.0,
+                "type": "income"
+            },
+            {
+                "date": "2025-04-24",
+                "name": "",
+                "reason": "Haribhau Gore",
+                "amount": 200000.0,
+                "type": "expense"
+            },
+            {
+                "date": "2025-04-25",
+                "name": "",
+                "reason": "",
+                "amount": 500000.0,
+                "type": "expense"
+            },
+            {
+                "date": "2025-05-02",
+                "name": "",
+                "reason": "Akkalkot trip BUS",
+                "amount": 120000.0,
+                "type": "expense"
+            },
+            {
+                "date": "2025-05-23",
+                "name": "",
+                "reason": "",
+                "amount": 250000.0,
+                "type": "income"
+            },
+            {
+                "date": "2025-05-29",
+                "name": "",
+                "reason": "Anil Lambugol",
+                "amount": 900000.0,
+                "type": "expense"
+            },
+            {
+                "date": "2025-06-15",
+                "name": "",
+                "reason": "Balasaheb",
+                "amount": 2550000.0,
+                "type": "income"
+            },
+            {
+                "date": "2025-06-21",
+                "name": "",
+                "reason": "किरकोळ खर्च",
+                "amount": 50000.0,
+                "type": "expense"
+            },
+            {
+                "date": "2025-07-02",
+                "name": "",
+                "reason": "Kalidas Mama",
+                "amount": 1000000.0,
+                "type": "expense"
+            },
+            {
+                "date": "2025-07-16",
+                "name": "",
+                "reason": "Swamiraj Tax",
+                "amount": 75000.0,
+                "type": "expense"
+            },
+            {
+                "date": "2025-08-10",
+                "name": "",
+                "reason": "Anil Parkhe",
+                "amount": 600000.0,
+                "type": "expense"
+            },
+            {
+                "date": "2025-12-08",
+                "name": "",
+                "reason": "Solar",
+                "amount": 100000.0,
+                "type": "expense"
+            },
+            {
+                "date": "2025-08-13",
+                "name": "",
+                "reason": "किरकोळ खर्च",
+                "amount": 11000.0,
+                "type": "expense"
+            },
+            {
+                "date": "2025-08-18",
+                "name": "",
+                "reason": "Malhari Chandhere",
+                "amount": 1000000.0,
+                "type": "income"
+            },
+            {
+                "date": "2025-08-18",
+                "name": "",
+                "reason": "Rudved",
+                "amount": 381500.0,
+                "type": "income"
+            },
+            {
+                "date": "2025-08-18",
+                "name": "",
+                "reason": "Malhari Chandhere",
+                "amount": 1000000.0,
+                "type": "income"
+            },
+            {
+                "date": "2025-08-25",
+                "name": "",
+                "reason": "Rudved",
+                "amount": 300000.0,
+                "type": "income"
+            },
+            {
+                "date": "2025-09-03",
+                "name": "",
+                "reason": "Rudved",
+                "amount": 200000.0,
+                "type": "income"
+            },
+            {
+                "date": "2025-09-03",
+                "name": "",
+                "reason": "Watch",
+                "amount": 125000.0,
+                "type": "expense"
+            },
+            {
+                "date": "2025-09-03",
+                "name": "",
+                "reason": "Watch",
+                "amount": 75000.0,
+                "type": "expense"
+            },
+            {
+                "date": "2025-09-10",
+                "name": "",
+                "reason": "Rudved",
+                "amount": 150000.0,
+                "type": "income"
+            },
+            {
+                "date": "2025-09-22",
+                "name": "",
+                "reason": "Rudved",
+                "amount": 150000.0,
+                "type": "income"
+            },
+            {
+                "date": "2025-09-22",
+                "name": "",
+                "reason": "Anil Lambugol",
+                "amount": 500000.0,
+                "type": "income"
+            },
+            {
+                "date": "2025-10-01",
+                "name": "",
+                "reason": "Kalidas kaka (Rudved)",
+                "amount": 100000.0,
+                "type": "expense"
+            },
+            {
+                "date": "2025-10-08",
+                "name": "",
+                "reason": "Rudved",
+                "amount": 150000.0,
+                "type": "income"
+            },
+            {
+                "date": "2025-10-11",
+                "name": "",
+                "reason": "खरेदी दिवाळी कपडे",
+                "amount": 21000.0,
+                "type": "expense"
+            },
+            {
+                "date": "2025-10-14",
+                "name": "",
+                "reason": "Mummy खर्च",
+                "amount": 6500.0,
+                "type": "expense"
+            },
+            {
+                "date": "2025-10-15",
+                "name": "",
+                "reason": "Om Party",
+                "amount": 4000.0,
+                "type": "expense"
+            },
+            {
+                "date": "2025-10-15",
+                "name": "",
+                "reason": "Vikram Bonus Diwali",
+                "amount": 10000.0,
+                "type": "expense"
+            },
+            {
+                "date": "2025-10-15",
+                "name": "",
+                "reason": "Lighting (मंडप)",
+                "amount": 5000.0,
+                "type": "expense"
+            },
+            {
+                "date": "2025-10-15",
+                "name": "",
+                "reason": "Kandil Diwali",
+                "amount": 600.0,
+                "type": "expense"
+            },
+            {
+                "date": "2025-10-15",
+                "name": "",
+                "reason": "Rudved",
+                "amount": 100000.0,
+                "type": "income"
+            },
+            {
+                "date": "2025-10-15",
+                "name": "",
+                "reason": "Rudraksh Gold Chain",
+                "amount": 100000.0,
+                "type": "expense"
+            },
+            {
+                "date": "2025-10-18",
+                "name": "",
+                "reason": "Office Work",
+                "amount": 100000.0,
+                "type": "income"
+            },
+            {
+                "date": "2025-10-18",
+                "name": "",
+                "reason": "Rudraksh Gold Chain",
+                "amount": 100000.0,
+                "type": "expense"
+            },
+            {
+                "date": "2025-10-19",
+                "name": "",
+                "reason": "Gold Chain & Silver kada (Navin Note)",
+                "amount": 90000.0,
+                "type": "expense"
+            },
+            {
+                "date": "2025-10-27",
+                "name": "",
+                "reason": "Omkar Account (VT Office)",
+                "amount": 190000.0,
+                "type": "expense"
+            },
+            {
+                "date": "2025-10-31",
+                "name": "",
+                "reason": "Vikram Dada",
+                "amount": 20000.0,
+                "type": "expense"
+            },
+            {
+                "date": "2025-11-04",
+                "name": "",
+                "reason": "Sagar Jadhav",
+                "amount": 20000.0,
+                "type": "expense"
+            },
+            {
+                "date": "2025-11-06",
+                "name": "",
+                "reason": "Rudved",
+                "amount": 150000.0,
+                "type": "income"
+            },
+            {
+                "date": "2025-11-26",
+                "name": "",
+                "reason": "Sagar Jadhav (Komal)",
+                "amount": 3000.0,
+                "type": "expense"
+            },
+            {
+                "date": "2025-12-01",
+                "name": "",
+                "reason": "Surat (Election)",
+                "amount": 35000.0,
+                "type": "expense"
+            },
+            {
+                "date": "2025-12-01",
+                "name": "",
+                "reason": "Mummy Sadi / Pathardi",
+                "amount": 5000.0,
+                "type": "expense"
+            },
+            {
+                "date": "2025-12-01",
+                "name": "",
+                "reason": "Ganesh (Patrak Vatap)",
+                "amount": 24000.0,
+                "type": "expense"
+            },
+            {
+                "date": "2025-12-02",
+                "name": "",
+                "reason": "Dhawle Kaka (Datta Jayanti)",
+                "amount": 150000.0,
+                "type": "expense"
+            },
+            {
+                "date": "2025-12-03",
+                "name": "",
+                "reason": "घर खर्च",
+                "amount": 5000.0,
+                "type": "expense"
+            },
+            {
+                "date": "2025-12-04",
+                "name": "",
+                "reason": "Balaji Flex",
+                "amount": 100000.0,
+                "type": "expense"
+            },
+            {
+                "date": "2025-12-05",
+                "name": "",
+                "reason": "Ganesh (Patrak Vatap)",
+                "amount": 14400.0,
+                "type": "expense"
+            },
+            {
+                "date": "2025-12-07",
+                "name": "",
+                "reason": "Ganesh (Patrak Vatap)",
+                "amount": 15600.0,
+                "type": "expense"
+            },
+            {
+                "date": "2025-12-07",
+                "name": "",
+                "reason": "Dhawle Kaka (Datta Jayanti)",
+                "amount": 150000.0,
+                "type": "expense"
+            },
+            {
+                "date": "2025-12-08",
+                "name": "",
+                "reason": "Ganesh (Patrak Vatap)",
+                "amount": 37000.0,
+                "type": "expense"
+            },
+            {
+                "date": "2025-12-09",
+                "name": "",
+                "reason": "Vilas Dada (Rikshaw Flex)",
+                "amount": 25000.0,
+                "type": "expense"
+            },
+            {
+                "date": "2025-12-09",
+                "name": "",
+                "reason": "Metro Advertisement",
+                "amount": 132000.0,
+                "type": "expense"
+            },
+            {
+                "date": "2025-12-10",
+                "name": "",
+                "reason": "Vilas Dada (Rikshaw Flex)",
+                "amount": 10000.0,
+                "type": "expense"
+            },
+            {
+                "date": "2025-12-12",
+                "name": "",
+                "reason": "RTGS Guru Datta (Omkar)",
+                "amount": 160000.0,
+                "type": "expense"
+            },
+            {
+                "date": "2025-12-12",
+                "name": "",
+                "reason": "Anil Lambugol",
+                "amount": 400000.0,
+                "type": "income"
+            },
+            {
+                "date": "2025-12-15",
+                "name": "",
+                "reason": "Ganesh (Patrak Vatap)",
+                "amount": 27600.0,
+                "type": "expense"
+            },
+            {
+                "date": "2025-12-17",
+                "name": "",
+                "reason": "Dhawle kaka (Patak PrintFlex)",
+                "amount": 50000.0,
+                "type": "expense"
+            },
+            {
+                "date": "2025-12-18",
+                "name": "",
+                "reason": "Ganesh (Gaurav Marketing)",
+                "amount": 15000.0,
+                "type": "expense"
+            },
+            {
+                "date": "2025-12-20",
+                "name": "",
+                "reason": "Dipa Kamble",
+                "amount": 100000.0,
+                "type": "expense"
+            },
+            {
+                "date": "2025-12-22",
+                "name": "",
+                "reason": "All bank account",
+                "amount": 3000.0,
+                "type": "expense"
+            },
+            {
+                "date": "2025-12-22",
+                "name": "",
+                "reason": "Lokmat News",
+                "amount": 30000.0,
+                "type": "expense"
+            },
+            {
+                "date": "2025-12-23",
+                "name": "",
+                "reason": "मतदार यादी",
+                "amount": 15000.0,
+                "type": "expense"
+            },
+            {
+                "date": "2025-12-23",
+                "name": "",
+                "reason": "Dhawle Kaka",
+                "amount": 50000.0,
+                "type": "expense"
+            },
+            {
+                "date": "2025-12-30",
+                "name": "",
+                "reason": "Laptop",
+                "amount": 6000.0,
+                "type": "expense"
+            },
+            {
+                "date": "2025-12-30",
+                "name": "",
+                "reason": "Dinner जेवण कार्यक्रम",
+                "amount": 12500.0,
+                "type": "expense"
+            },
+            {
+                "date": "2025-12-31",
+                "name": "",
+                "reason": "Ganesh (Gaurav Marketing)",
+                "amount": 30000.0,
+                "type": "expense"
+            },
+            {
+                "date": "2026-01-01",
+                "name": "",
+                "reason": "Dhawle Kaka",
+                "amount": 29000.0,
+                "type": "expense"
+            },
+            {
+                "date": "2026-01-01",
+                "name": "",
+                "reason": "Jupiter",
+                "amount": 107000.0,
+                "type": "expense"
+            },
+            {
+                "date": "2026-01-03",
+                "name": "",
+                "reason": "Rudved",
+                "amount": 100000.0,
+                "type": "income"
+            },
+            {
+                "date": "2026-01-05",
+                "name": "",
+                "reason": "Rudved",
+                "amount": 200000.0,
+                "type": "income"
+            },
+            {
+                "date": "2026-01-11",
+                "name": "",
+                "reason": "Haribhau",
+                "amount": 100000.0,
+                "type": "income"
+            },
+            {
+                "date": "2026-01-16",
+                "name": "",
+                "reason": "Gopal Latne",
+                "amount": 300000.0,
+                "type": "expense"
+            },
+            {
+                "date": "2026-01-18",
+                "name": "",
+                "reason": "Diesel & इतर (Parner)",
+                "amount": 2000.0,
+                "type": "expense"
+            },
+            {
+                "date": "2026-01-21",
+                "name": "",
+                "reason": "Bottle (दूध)",
+                "amount": 14000.0,
+                "type": "expense"
+            },
+            {
+                "date": "2026-01-24",
+                "name": "",
+                "reason": "Biryani",
+                "amount": 7600.0,
+                "type": "expense"
+            },
+            {
+                "date": "2026-03-02",
+                "name": "",
+                "reason": "Jupiter Seat Repair",
+                "amount": 1000.0,
+                "type": "expense"
+            },
+            {
+                "date": "2026-02-18",
+                "name": "",
+                "reason": "Omkar Trip",
+                "amount": 5000.0,
+                "type": "expense"
+            },
+            {
+                "date": "2026-02-26",
+                "name": "",
+                "reason": "Dress कपडे (Kamble Puja)",
+                "amount": 1000.0,
+                "type": "expense"
+            },
+            {
+                "date": "2026-03-04",
+                "name": "",
+                "reason": "Krushna interest",
+                "amount": 13300.0,
+                "type": "income"
+            },
+            {
+                "date": "2026-03-04",
+                "name": "",
+                "reason": "Gopal interest",
+                "amount": 16600.0,
+                "type": "income"
+            },
+            {
+                "date": "2026-03-06",
+                "name": "",
+                "reason": "From Kalidas Dhere",
+                "amount": 80000.0,
+                "type": "income"
+            },
+            {
+                "date": "2026-03-06",
+                "name": "",
+                "reason": "Omkar Mobile S26",
+                "amount": 157200.0,
+                "type": "expense"
+            },
+            {
+                "date": "2026-03-07",
+                "name": "",
+                "reason": "कोष्टी समाज मंदिर",
+                "amount": 11000.0,
+                "type": "expense"
+            },
+            {
+                "date": "2026-03-12",
+                "name": "",
+                "reason": "Mavshi Bhande Farshi",
+                "amount": 50000.0,
+                "type": "expense"
+            },
+            {
+                "date": "2026-03-12",
+                "name": "",
+                "reason": "Mummy खर्च",
+                "amount": 10000.0,
+                "type": "expense"
+            },
+            {
+                "date": "2026-03-12",
+                "name": "",
+                "reason": "Pravin प्रसाद Packet",
+                "amount": 10000.0,
+                "type": "expense"
+            },
+            {
+                "date": "2026-03-13",
+                "name": "",
+                "reason": "Omkar Class",
+                "amount": 13000.0,
+                "type": "expense"
+            },
+            {
+                "date": "2026-03-23",
+                "name": "",
+                "reason": "Rudved",
+                "amount": 1000000.0,
+                "type": "income"
+            },
+            {
+                "date": "2026-03-25",
+                "name": "",
+                "reason": "Flex (Suraj)",
+                "amount": 125000.0,
+                "type": "expense"
+            },
+            {
+                "date": "2026-03-26",
+                "name": "",
+                "reason": "भिशी",
+                "amount": 25000.0,
+                "type": "expense"
+            },
+            {
+                "date": "2026-03-26",
+                "name": "",
+                "reason": "Gold (Savitra Attya)",
+                "amount": 600000.0,
+                "type": "expense"
+            },
+            {
+                "date": "2026-04-02",
+                "name": "",
+                "reason": "Pressure Pump",
+                "amount": 1000.0,
+                "type": "expense"
+            },
+            {
+                "date": "2026-04-07",
+                "name": "",
+                "reason": "Biopsy Ruby Pappa",
+                "amount": 75000.0,
+                "type": "expense"
+            },
+            {
+                "date": "2026-04-08",
+                "name": "",
+                "reason": "Rudved (Swamiraj)",
+                "amount": 50000.0,
+                "type": "expense"
+            },
+            {
+                "date": "2026-04-18",
+                "name": "",
+                "reason": "CA Umesh Badgyar",
+                "amount": 30000.0,
+                "type": "expense"
+            },
+            {
+                "date": "2026-04-21",
+                "name": "Mavshi",
+                "reason": "Mavshi Bhande Farshi",
+                "amount": 50000,
+                "type": "income",
+                "person": "Mavshi",
+                "category": "Mavshi Bhande Farshi"
+            },
+            {
+                "date": "2026-04-22",
+                "name": "",
+                "reason": "Pappa Lab Test Metropolis",
+                "amount": 12000.0,
+                "type": "expense"
+            },
+            {
+                "date": "2026-04-25",
+                "name": "",
+                "reason": "Omkar Class",
+                "amount": 13000.0,
+                "type": "expense"
+            },
+            {
+                "date": "2026-04-29",
+                "name": "",
+                "reason": "Gopal Latne (Phalke)",
+                "amount": 280000.0,
+                "type": "expense"
+            },
+            {
+                "date": "2026-04-29",
+                "name": "",
+                "reason": "4 Wheeler Servicing",
+                "amount": 18000.0,
+                "type": "expense"
+            },
+            {
+                "date": "2026-05-01",
+                "name": "",
+                "reason": "Omkar (Food) (Coimbatore)",
+                "amount": 3000.0,
+                "type": "expense"
+            },
+            {
+                "date": "2026-05-05",
+                "name": "",
+                "reason": "Vilas Dada Hospital",
+                "amount": 8500.0,
+                "type": "expense"
+            },
+            {
+                "date": "2026-05-08",
+                "name": "",
+                "reason": "Office Income",
+                "amount": 100000.0,
+                "type": "income"
+            },
+            {
+                "date": "2026-05-10",
+                "name": "",
+                "reason": "Office Income",
+                "amount": 107000.0,
+                "type": "income"
+            },
+            {
+                "date": "2026-05-10",
+                "name": "",
+                "reason": "Gourav Kamble Jupiter 2 Wheeler",
+                "amount": 107000.0,
+                "type": "expense"
+            },
+            {
+                "date": "2026-05-10",
+                "name": "",
+                "reason": "Gorilla, Tatya, Gaurav Weeding",
+                "amount": 20000.0,
+                "type": "expense"
+            },
+            {
+                "date": "2026-05-13",
+                "name": "",
+                "reason": "Rudved",
+                "amount": 320000.0,
+                "type": "income"
+            },
+            {
+                "date": "2026-05-15",
+                "name": "",
+                "reason": "Naigoan Plot",
+                "amount": 600000.0,
+                "type": "income"
+            },
+            {
+                "date": "2026-05-16",
+                "name": "",
+                "reason": "Office Income",
+                "amount": 100000.0,
+                "type": "income"
+            },
+            {
+                "date": "2026-05-16",
+                "name": "",
+                "reason": "Puja Lipare Mutual Fund",
+                "amount": 100000.0,
+                "type": "expense"
+            },
+            {
+                "date": "2026-05-17",
+                "name": "",
+                "reason": "Haribhau Gore",
+                "amount": 100000.0,
+                "type": "income"
+            },
+            {
+                "date": "2026-05-19",
+                "name": "",
+                "reason": "Naigoan Plot",
+                "amount": 300000.0,
+                "type": "income"
+            },
+            {
+                "date": "2026-05-21",
+                "name": "",
+                "reason": "Pressure Pump Repair",
+                "amount": 5500.0,
+                "type": "expense"
+            },
+            {
+                "date": "2026-05-25",
+                "name": "",
+                "reason": "Office Income",
+                "amount": 35000.0,
+                "type": "income"
+            },
+            {
+                "date": "2026-05-28",
+                "name": "",
+                "reason": "Trip Solapur / Kolhapur",
+                "amount": 30000.0,
+                "type": "expense"
+            },
+            {
+                "date": "2026-05-28",
+                "name": "",
+                "reason": "Mummy (घर खर्च)",
+                "amount": 5000.0,
+                "type": "expense"
+            },
+            {
+                "date": "2026-05-30",
+                "name": "",
+                "reason": "Kalpataru ( Soap stand)",
+                "amount": 4000.0,
+                "type": "expense"
+            },
+            {
+                "date": "2026-06-03",
+                "name": "",
+                "reason": "Mobile Mahesh",
+                "amount": 50000.0,
+                "type": "expense"
+            },
+            {
+                "date": "2026-06-07",
+                "name": "",
+                "reason": "Rudved",
+                "amount": 500000.0,
+                "type": "income"
+            },
+            {
+                "date": "2026-06-07",
+                "name": "",
+                "reason": "Rudved",
+                "amount": 400000.0,
+                "type": "income"
+            },
+            {
+                "date": "2026-06-07",
+                "name": "",
+                "reason": "घरी (Adhikmaas खर्च)",
+                "amount": 40000.0,
+                "type": "expense"
+            },
+            {
+                "date": "2026-06-12",
+                "name": "",
+                "reason": "Diesel (Dapoli)",
+                "amount": 5000.0,
+                "type": "expense"
+            },
+            {
+                "date": "2026-06-16",
+                "name": "",
+                "reason": "Sukanta (Sukanta Kelvan)",
+                "amount": 5000.0,
+                "type": "expense"
+            },
+            {
+                "date": "2026-06-17",
+                "name": "",
+                "reason": "Medical Test (Pappa)",
+                "amount": 5000.0,
+                "type": "expense"
+            },
+            {
+                "date": "2026-06-19",
+                "name": "",
+                "reason": "Office Work",
+                "amount": 33500.0,
+                "type": "income"
+            },
+            {
+                "date": "2026-06-19",
+                "name": "",
+                "reason": "Tank (पाणी टाकी stand)",
+                "amount": 33500.0,
+                "type": "expense"
+            },
+            {
+                "date": "2026-06-19",
+                "name": "",
+                "reason": "Trip (Pappa)",
+                "amount": 25000.0,
+                "type": "expense"
+            },
+            {
+                "date": "2026-06-19",
+                "name": "",
+                "reason": "घर खर्च (Mummy)",
+                "amount": 5000.0,
+                "type": "expense"
+            },
+            {
+                "date": "2026-06-23",
+                "name": "",
+                "reason": "Rudved",
+                "amount": 500000.0,
+                "type": "income"
+            },
+            {
+                "date": "2026-06-28",
+                "name": "",
+                "reason": "Rudved",
+                "amount": 200000.0,
+                "type": "income"
+            },
+            {
+                "date": "2026-07-14",
+                "name": "",
+                "reason": "Rudved",
+                "amount": 200000.0,
+                "type": "income"
+            },
+            {
+                "date": "2026-07-15",
+                "name": "",
+                "reason": "Omkar Mahesh कपडे",
+                "amount": 20000.0,
+                "type": "expense"
+            },
+            {
+                "date": "2026-07-27",
+                "name": "",
+                "reason": "Omkar",
+                "amount": 5000.0,
+                "type": "expense"
+            },
+            {
+                "date": "2026-08-06",
+                "name": "",
+                "reason": "Mohan Guruji Puja",
+                "amount": 17500.0,
+                "type": "expense"
+            },
+            {
+                "date": "2026-08-08",
+                "name": "",
+                "reason": "Rudved",
+                "amount": 500000.0,
+                "type": "income"
+            },
+            {
+                "date": "2026-08-08",
+                "name": "",
+                "reason": "Naigoan Plot (Bhai Dada)",
+                "amount": 300000.0,
+                "type": "income"
+            },
+            {
+                "date": "2026-08-14",
+                "name": "",
+                "reason": "Ruby Hall Hospital (Dialysis) Admit",
+                "amount": 20000.0,
+                "type": "expense"
+            },
+            {
+                "date": "2026-08-14",
+                "name": "",
+                "reason": "Medicines",
+                "amount": 10500.0,
+                "type": "expense"
+            },
+            {
+                "date": "2026-08-14",
+                "name": "",
+                "reason": "Galange Mama",
+                "amount": 4000.0,
+                "type": "expense"
+            },
+            {
+                "date": "2026-08-14",
+                "name": "",
+                "reason": "Motor (Starter) Swamivishwa",
+                "amount": 2600.0,
+                "type": "expense"
+            },
+            {
+                "date": "2026-08-15",
+                "name": "",
+                "reason": "Rudved",
+                "amount": 100000.0,
+                "type": "income"
+            },
+            {
+                "date": "2026-08-15",
+                "name": "",
+                "reason": "Dialysis",
+                "amount": 6500.0,
+                "type": "expense"
+            },
+            {
+                "date": "2026-08-16",
+                "name": "",
+                "reason": "Rocking Chair गादी",
+                "amount": 1800.0,
+                "type": "expense"
+            },
+            {
+                "date": "2026-08-16",
+                "name": "",
+                "reason": "Rocking Chair",
+                "amount": 5800.0,
+                "type": "expense"
+            },
+            {
+                "date": "2026-08-22",
+                "name": "",
+                "reason": "Dialysis",
+                "amount": 4800.0,
+                "type": "expense"
+            },
+            {
+                "date": "2026-08-23",
+                "name": "",
+                "reason": "Amol Bhapkar",
+                "amount": 200000.0,
+                "type": "expense"
+            },
+            {
+                "date": "2026-08-23",
+                "name": "",
+                "reason": "Atul Kaka",
+                "amount": 52500.0,
+                "type": "expense"
+            },
+            {
+                "date": "2026-08-25",
+                "name": "",
+                "reason": "Kambaag",
+                "amount": 50000.0,
+                "type": "income"
+            },
+            {
+                "date": "2026-08-26",
+                "name": "",
+                "reason": "Dialysis (23rd & 26th)",
+                "amount": 10000.0,
+                "type": "expense"
+            },
+            {
+                "date": "2026-08-28",
+                "name": "",
+                "reason": "Raksha Bandhan (Attya)",
+                "amount": 20000.0,
+                "type": "expense"
+            },
+            {
+                "date": "2026-08-29",
+                "name": "",
+                "reason": "Rudved",
+                "amount": 100000.0,
+                "type": "income"
+            },
+            {
+                "date": "2026-08-29",
+                "name": "",
+                "reason": "Dialysis",
+                "amount": 5000.0,
+                "type": "expense"
+            },
+            {
+                "id": "given-ganesh-20260825",
+                "date": "2026-08-25",
+                "type": "given",
+                "amount": 2500000,
+                "name": "Ganesh",
+                "reason": "FD",
+                "person": "Ganesh",
+                "category": ""
+            },
+            {
+                "id": "given-pravin-20260324",
+                "date": "2026-03-24",
+                "type": "given",
+                "amount": 1000000,
+                "name": "Pravin Kumbhar",
+                "reason": "FD",
+                "person": "Pravin Kumbhar",
+                "category": ""
+            },
+            {
+                "id": "given-pravin-20260505",
+                "date": "2026-05-05",
+                "type": "given",
+                "amount": 200000,
+                "name": "Pravin Kumbhar",
+                "reason": "FD",
+                "person": "Pravin Kumbhar",
+                "category": ""
+            },
+            {
+                "id": "given-pravin-20260513",
+                "date": "2026-05-13",
+                "type": "given",
+                "amount": 300000,
+                "name": "Pravin Kumbhar",
+                "reason": "FD",
+                "person": "Pravin Kumbhar",
+                "category": ""
+            },
+            {
+                "id": "given-krishna-20250625",
+                "date": "2025-06-25",
+                "type": "given",
+                "amount": 250000,
+                "name": "Krishna",
+                "reason": "FD",
+                "person": "Krishna",
+                "category": ""
+            },
+            {
+                "id": "given-krishna-20260823",
+                "date": "2026-08-23",
+                "type": "given",
+                "amount": 250000,
+                "name": "Krishna",
+                "reason": "FD",
+                "person": "Krishna",
+                "category": ""
+            },
+            {
+                "id": "given-gopal-20250625",
+                "date": "2025-06-25",
+                "type": "given",
+                "amount": 250000,
+                "name": "Gopal",
+                "reason": "FD",
+                "person": "Gopal",
+                "category": ""
+            },
+            {
+                "id": "given-gopal-20260823",
+                "date": "2026-08-23",
+                "type": "given",
+                "amount": 250000,
+                "name": "Gopal",
+                "reason": "FD",
+                "person": "Gopal",
+                "category": ""
+            },
+            {
+                "id": "given-vilas-20260828",
+                "date": "2026-08-28",
+                "type": "given",
+                "amount": 1500000,
+                "name": "Vilas Jadhav",
+                "reason": "FD",
+                "person": "Vilas Jadhav",
+                "category": ""
+            }
+        ]
+    }
+}
