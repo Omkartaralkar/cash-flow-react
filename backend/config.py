@@ -1,20 +1,33 @@
 import os
+import shutil
 
 # backend/config.py
 #
 # BASE_DIR      -> Cash_Flow_Manager/
-# DATA_DIR      -> Cash_Flow_Manager/data/
-#
-# The original project kept data.json / users.json next to app.py.
-# They now live in a dedicated data/ folder (see MIGRATION_NOTES.md),
-# but every value here can still be overridden with environment
-# variables, exactly like before.
+# DATA_DIR      -> Cash_Flow_Manager/data/ (or /tmp/data on Vercel)
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-DATA_DIR = os.environ.get(
-    "DATA_DIR",
-    os.path.join(BASE_DIR, "data")
-)
+
+# Serverless environments like Vercel have a read-only filesystem except for /tmp
+if os.environ.get("VERCEL"):
+    DATA_DIR = os.environ.get("DATA_DIR", "/tmp/data")
+    os.makedirs(DATA_DIR, exist_ok=True)
+
+    # Seed initial JSON data to /tmp so the app can read & write
+    seed_dir = os.path.join(BASE_DIR, "data")
+    for fname in ("data.json", "users.json"):
+        src = os.path.join(seed_dir, fname)
+        dst = os.path.join(DATA_DIR, fname)
+        if os.path.exists(src) and not os.path.exists(dst):
+            try:
+                shutil.copy2(src, dst)
+            except Exception:
+                pass
+else:
+    DATA_DIR = os.environ.get(
+        "DATA_DIR",
+        os.path.join(BASE_DIR, "data")
+    )
 
 SECRET_KEY = os.environ.get(
     "SECRET_KEY",

@@ -20,16 +20,17 @@ def create_app():
 
     # Sessions need to survive the browser tab closing so the React
     # app's "session" check on load keeps working like the old
-    # server-rendered app did.
-    app.config.update(
-        SESSION_COOKIE_HTTPONLY=True,
-        SESSION_COOKIE_SAMESITE="Lax",
-    )
-
     # ------------------------------------------------------------
     # Data safety: back up data.json / users.json on every start,
     # before anything can be written to them.
     # ------------------------------------------------------------
+    if not os.environ.get("VERCEL"):
+        try:
+            backup_now()
+        except Exception as exc:  # never block startup on a backup failure
+            app.logger.warning(f"Startup backup failed: {exc}")
+    else:
+        app.logger.info("Running on Vercel: skipping disk backup due to read-only container.")
     try:
         backup_now()
     except Exception as exc:  # never block startup on a backup failure

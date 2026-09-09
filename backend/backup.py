@@ -10,31 +10,43 @@ Also usable on its own:
 
 import os
 import shutil
+import logging
 from datetime import datetime
 
 from config import DATA_FILE, USERS_FILE, BACKUP_DIR
 
 
 def backup_now():
-    os.makedirs(BACKUP_DIR, exist_ok=True)
+    # Vercel serverless containers are read-only; skip backup if running on Vercel
+    if os.environ.get("VERCEL"):
+        logging.info("Vercel environment detected: skipping local file backup.")
+        return []
 
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    created = []
+    try:
+        os.makedirs(BACKUP_DIR, exist_ok=True)
 
-    for source in (DATA_FILE, USERS_FILE):
-        if not os.path.exists(source):
-            continue
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        created = []
 
-        filename = os.path.basename(source)
-        destination = os.path.join(
-            BACKUP_DIR,
-            f"{filename}.backup_{timestamp}"
-        )
+        for source in (DATA_FILE, USERS_FILE):
+            if not os.path.exists(source):
+                continue
 
-        shutil.copy2(source, destination)
-        created.append(destination)
+            filename = os.path.basename(source)
+            destination = os.path.join(
+                BACKUP_DIR,
+                f"{filename}.backup_{timestamp}"
+            )
 
-    return created
+            shutil.copy2(source, destination)
+            created.append(destination)
+
+        return created
+    except OSError as e:
+        if e.errno == 30:  # Read-only filesystem error
+            logging.warning(f"Skipping backup due to read-only filesystem: {e}")
+            return []
+        raise e
 
 
 if __name__ == "__main__":
