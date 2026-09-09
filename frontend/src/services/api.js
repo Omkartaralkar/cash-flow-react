@@ -1,4 +1,4 @@
-const BASE = import.meta.env.VITE_API_URL || '';
+const BASE = import.meta.env.VITE_API_URL || "";
 
 async function parseBody(res) {
   const text = await res.text();
@@ -6,6 +6,10 @@ async function parseBody(res) {
   try {
     return JSON.parse(text);
   } catch {
+    // If the server returned HTML (Vercel rewrite fallback), throw instead of returning null
+    if (text.trim().startsWith("<")) {
+      throw new Error("API endpoint not found; received HTML instead of JSON.");
+    }
     return null;
   }
 }
@@ -23,7 +27,7 @@ async function request(path, options = {}) {
   const data = await parseBody(res);
 
   if (!res.ok) {
-    const message = (data && data.error) || "Something went wrong.";
+    const message = (data && data.error) || `Request failed with status ${res.status}`;
     const error = new Error(message);
     error.status = res.status;
     throw error;
@@ -32,37 +36,7 @@ async function request(path, options = {}) {
   return data;
 }
 
-export function get(path) {
-  return request(path);
-}
-
-export function post(path, body) {
-  return request(path, { method: "POST", body: JSON.stringify(body || {}) });
-}
-
-export function put(path, body) {
-  return request(path, { method: "PUT", body: JSON.stringify(body || {}) });
-}
-
-export function del(path) {
-  return request(path, { method: "DELETE" });
-}
-
-export async function upload(path, formData) {
-  const res = await fetch(BASE + path, {
-    method: "POST",
-    credentials: "include",
-    body: formData,
-  });
-
-  const data = await parseBody(res);
-
-  if (!res.ok) {
-    const message = (data && data.error) || "Upload failed.";
-    const error = new Error(message);
-    error.status = res.status;
-    throw error;
-  }
-
-  return data;
-}
+export const get = (path) => request(path);
+export const post = (path, body) => request(path, { method: "POST", body: JSON.stringify(body || {}) });
+export const put = (path, body) => request(path, { method: "PUT", body: JSON.stringify(body || {}) });
+export const del = (path) => request(path, { method: "DELETE" });
