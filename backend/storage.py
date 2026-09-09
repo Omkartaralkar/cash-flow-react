@@ -1,12 +1,23 @@
 import json
 import os
+import shutil
 from flask import session
 
-from config import DATA_FILE, USERS_FILE, DATA_DIR
+from config import DATA_FILE, USERS_FILE, DATA_DIR, BASE_DIR
 
 
 def _ensure_data_dir():
     os.makedirs(DATA_DIR, exist_ok=True)
+    # Ensure seed JSON files are copied to /tmp/data if not yet present
+    seed_dir = os.path.join(BASE_DIR, "data")
+    for file_path, fname in ((DATA_FILE, "data.json"), (USERS_FILE, "users.json")):
+        if not os.path.exists(file_path):
+            src = os.path.join(seed_dir, fname)
+            if os.path.exists(src):
+                try:
+                    shutil.copy2(src, file_path)
+                except Exception:
+                    pass
 
 
 def load_users():
