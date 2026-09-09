@@ -51,7 +51,7 @@ def login():
             and user.get("password") == password
         ):
             session["user"] = user.get("username")
-            session.permanent = True
+            # session.permanent = True is omitted so the session clears when the browser closes
 
             return jsonify({"ok": True, "username": session["user"]})
 
