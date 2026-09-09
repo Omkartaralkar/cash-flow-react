@@ -8,43 +8,15 @@
   },
   "rewrites": [
     {
-      "source": "/auth/(.*)",
-      "destination": "/api/index"
-    },
-    {
       "source": "/api/(.*)",
       "destination": "/api/index"
     },
     {
-      "source": "/dashboard",
+      "source": "/auth/(.*)",
       "destination": "/api/index"
     },
     {
-      "source": "/transactions/(.*)",
-      "destination": "/api/index"
-    },
-    {
-      "source": "/transactions",
-      "destination": "/api/index"
-    },
-    {
-      "source": "/people/(.*)",
-      "destination": "/api/index"
-    },
-    {
-      "source": "/people",
-      "destination": "/api/index"
-    },
-    {
-      "source": "/reports",
-      "destination": "/api/index"
-    },
-    {
-      "source": "/debug-data",
-      "destination": "/api/index"
-    },
-    {
-      "source": "/((?!assets/|favicon.ico).*)",
+      "source": "/((?!assets/|favicon.ico|.*\\..*).*)",
       "destination": "/index.html"
     }
   ]
