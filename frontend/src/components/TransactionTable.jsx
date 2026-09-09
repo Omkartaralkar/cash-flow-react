@@ -7,20 +7,18 @@ export default function TransactionTable({
   onDelete,
   compact = false,
 }) {
-  // Compute running balance if not provided by backend
   const rowsWithBalance = useMemo(() => {
     if (!transactions.length) return [];
 
-    // If transactions already contain a backend balance, use them directly
     if (transactions[0]?.balance !== undefined && transactions[0]?.balance !== null) {
       return transactions;
     }
 
-    // Otherwise calculate running balance:
-    // Sort chronologically (oldest to newest) to accumulate balance
-    const chrono = [...transactions].sort(
-      (a, b) => new Date(a.date || 0) - new Date(b.date || 0)
-    );
+    const chrono = [...transactions].sort((a, b) => {
+      const timeA = new Date(a.date || 0).getTime();
+      const timeB = new Date(b.date || 0).getTime();
+      return timeA - timeB || String(a.id || "").localeCompare(String(b.id || ""));
+    });
 
     let running = 0;
     const balanceMap = new Map();
@@ -35,7 +33,6 @@ export default function TransactionTable({
       balanceMap.set(t.id, running);
     });
 
-    // Return original view order with attached running balance
     return transactions.map((t) => ({
       ...t,
       balance: balanceMap.get(t.id) ?? t.balance,
@@ -55,6 +52,7 @@ export default function TransactionTable({
         <thead>
           <tr>
             <th>Date</th>
+            <th>Name</th>
             <th>Description</th>
             <th style={thRight}>Credit</th>
             <th style={thRight}>Debit</th>
@@ -73,7 +71,11 @@ export default function TransactionTable({
               ? Number(t.balance).toLocaleString("en-IN")
               : null;
 
-            const description = t.person || t.reason || t.source || t.note || t.type || "—";
+            // Name / Party
+            const personName = t.person || t.name || "";
+
+            // Description / Reason / Note
+            const description = t.reason || t.source || t.note || t.description || "—";
 
             return (
               <tr key={t.id || idx}>
@@ -81,7 +83,11 @@ export default function TransactionTable({
                   {t.date ? formatDate(t.date) : "—"}
                 </td>
 
-                <td data-label="Description" style={{ fontWeight: 500 }}>
+                <td data-label="Name" style={{ fontWeight: 500 }}>
+                  {personName ? personName : <span style={{ opacity: 0.4 }}>—</span>}
+                </td>
+
+                <td data-label="Description">
                   {description}
                 </td>
 
