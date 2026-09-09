@@ -43,9 +43,18 @@ export default function Transactions() {
         to: dateTo,
         q: search,
       });
-      setTransactions(data.transactions);
+
+      if (data && Array.isArray(data.transactions)) {
+        setTransactions(data.transactions);
+      } else if (data && data.error) {
+        setError(data.error);
+        setTransactions([]);
+      } else {
+        setTransactions([]);
+      }
     } catch (err) {
       setError(err.message || "Could not load transactions.");
+      setTransactions([]);
     } finally {
       setLoading(false);
     }
@@ -61,12 +70,12 @@ export default function Transactions() {
   }, [search, typeFilter, dateFrom, dateTo, sortOrder]);
 
   const sorted = useMemo(() => {
-    const list = [...transactions];
+    const list = Array.isArray(transactions) ? [...transactions] : [];
     list.sort((a, b) => {
-      if (sortOrder === "newest") return b.id - a.id;
-      if (sortOrder === "oldest") return a.id - b.id;
-      if (sortOrder === "highest") return b.amount - a.amount;
-      if (sortOrder === "lowest") return a.amount - b.amount;
+      if (sortOrder === "newest") return (b.id || 0) - (a.id || 0);
+      if (sortOrder === "oldest") return (a.id || 0) - (b.id || 0);
+      if (sortOrder === "highest") return (b.amount || 0) - (a.amount || 0);
+      if (sortOrder === "lowest") return (a.amount || 0) - (b.amount || 0);
       return 0;
     });
     return list;
@@ -86,16 +95,20 @@ export default function Transactions() {
   }
 
   async function handleSubmit(payload) {
-    if (editing) {
-      await updateTransaction(editing.id, payload);
-      showToast("Transaction updated.");
-    } else {
-      await addTransaction(payload);
-      showToast("Transaction added.");
+    try {
+      if (editing) {
+        await updateTransaction(editing.id, payload);
+        showToast("Transaction updated.");
+      } else {
+        await addTransaction(payload);
+        showToast("Transaction added.");
+      }
+      setModalOpen(false);
+      setEditing(null);
+      load();
+    } catch (err) {
+      showToast(err.message || "Operation failed.", "error");
     }
-    setModalOpen(false);
-    setEditing(null);
-    load();
   }
 
   async function confirmDelete() {
@@ -124,6 +137,8 @@ export default function Transactions() {
 
       <div className="filter-bar">
         <input
+          id="transactions-search"
+          name="search"
           type="search"
           placeholder="Search name, reason…"
           value={search}
@@ -131,7 +146,12 @@ export default function Transactions() {
           className="filter-bar__search"
         />
 
-        <select value={typeFilter} onChange={(e) => setTypeFilter(e.target.value)}>
+        <select
+          id="transactions-type-filter"
+          name="typeFilter"
+          value={typeFilter}
+          onChange={(e) => setTypeFilter(e.target.value)}
+        >
           <option value="">All types</option>
           <option value="income">Income</option>
           <option value="expense">Expense</option>
@@ -140,19 +160,28 @@ export default function Transactions() {
         </select>
 
         <input
+          id="transactions-date-from"
+          name="dateFrom"
           type="date"
           value={dateFrom}
           onChange={(e) => setDateFrom(e.target.value)}
           aria-label="From date"
         />
         <input
+          id="transactions-date-to"
+          name="dateTo"
           type="date"
           value={dateTo}
           onChange={(e) => setDateTo(e.target.value)}
           aria-label="To date"
         />
 
-        <select value={sortOrder} onChange={(e) => setSortOrder(e.target.value)}>
+        <select
+          id="transactions-sort-order"
+          name="sortOrder"
+          value={sortOrder}
+          onChange={(e) => setSortOrder(e.target.value)}
+        >
           <option value="newest">Newest first</option>
           <option value="oldest">Oldest first</option>
           <option value="highest">Highest amount</option>
