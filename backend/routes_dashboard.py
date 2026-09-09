@@ -22,10 +22,10 @@ def dashboard():
         data = load_data()
         transactions = current_transactions(data) or []
 
-        # Sort chronologically (oldest first) so running ledger balance computes accurately
+        # Sort chronologically (oldest first) using string comparison for non-integer IDs
         transactions_chronological = sorted(
             transactions,
-            key=lambda t: (str(t.get("date", "")), int(t.get("id") or 0))
+            key=lambda t: (str(t.get("date", "")), str(t.get("id", "")))
         )
 
         ledger, totals, people = compute_ledger(transactions_chronological)
