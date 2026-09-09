@@ -22,7 +22,13 @@ def dashboard():
         data = load_data()
         transactions = current_transactions(data) or []
 
-        ledger, totals, people = compute_ledger(transactions)
+        # Sort chronologically (oldest first) so running ledger balance computes accurately
+        transactions_chronological = sorted(
+            transactions,
+            key=lambda t: (str(t.get("date", "")), int(t.get("id") or 0))
+        )
+
+        ledger, totals, people = compute_ledger(transactions_chronological)
         people = sorted_people_by_outstanding(people) if people else {}
 
         ledger_out = []
