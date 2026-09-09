@@ -1,29 +1,46 @@
 {
   "buildCommand": "cd frontend && npm install && npm run build",
   "outputDirectory": "frontend/dist",
+  "functions": {
+    "api/index.py": {
+      "includeFiles": "data/**"
+    }
+  },
   "rewrites": [
     {
-      "source": "/auth/:path*",
+      "source": "/auth/(.*)",
       "destination": "/api/index"
     },
     {
-      "source": "/api/:path*",
+      "source": "/api/(.*)",
       "destination": "/api/index"
     },
     {
-      "source": "/dashboard/:path*",
+      "source": "/dashboard",
       "destination": "/api/index"
     },
     {
-      "source": "/transactions/:path*",
+      "source": "/transactions/(.*)",
       "destination": "/api/index"
     },
     {
-      "source": "/people/:path*",
+      "source": "/transactions",
       "destination": "/api/index"
     },
     {
-      "source": "/reports/:path*",
+      "source": "/people/(.*)",
+      "destination": "/api/index"
+    },
+    {
+      "source": "/people",
+      "destination": "/api/index"
+    },
+    {
+      "source": "/reports",
+      "destination": "/api/index"
+    },
+    {
+      "source": "/debug-data",
       "destination": "/api/index"
     },
     {
