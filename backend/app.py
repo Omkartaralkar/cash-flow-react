@@ -49,37 +49,7 @@ def create_app():
     app.register_blueprint(import_bp)
 
     # Diagnostic endpoint to verify what seed data Flask loaded
-    @app.route("/api/debug-data")
-    @app.route("/debug-data")
-    def debug_data():
-        try:
-            from storage import load_data, load_users
-            data = load_data() or {}
-            users_doc = load_users() or {}
-            users_list = users_doc.get("users", [])
-            
-            # Count transactions per user key
-            counts = {}
-            for k, v in data.items():
-                if isinstance(v, dict):
-                    counts[k] = len(v.get("transactions", []))
-                else:
-                    counts[k] = "invalid_format"
-
-            return jsonify({
-                "status": "ok",
-                "current_session_user": session.get("user"),
-                "users_in_file": [u.get("username") if isinstance(u, dict) else str(u) for u in users_list],
-                "data_keys": list(data.keys()),
-                "transaction_counts": counts,
-            })
-        except Exception as exc:
-            import traceback
-            return jsonify({
-                "status": "error",
-                "message": str(exc),
-                "traceback": traceback.format_exc(),
-            }), 200
+    
 
     @app.errorhandler(404)
     def not_found(_error):
