@@ -1,6 +1,5 @@
 import os
-
-from flask import Flask, send_from_directory, jsonify
+from flask import Flask, send_from_directory, jsonify, session
 
 from config import SECRET_KEY, CORS_ORIGINS, FRONTEND_DIST
 from backup import backup_now
@@ -16,41 +15,32 @@ from routes_import import import_bp
 def create_app():
     app = Flask(__name__)
 
+    # Essential: Flask sessions cannot persist without a valid secret key
     app.secret_key = os.environ.get("SECRET_KEY", SECRET_KEY)
 
-    # Sessions need to survive the browser tab closing so the React
-    # app's "session" check on load keeps working like the old
-    # ------------------------------------------------------------
-    # Data safety: back up data.json / users.json on every start,
-    # before anything can be written to them.
-    # ------------------------------------------------------------
+    app.config.update(
+        SESSION_COOKIE_HTTPONLY=True,
+        SESSION_COOKIE_SAMESITE="Lax",
+        SESSION_COOKIE_SECURE=True,
+    )
+
+    # Startup backup (local development only)
     if not os.environ.get("VERCEL"):
         try:
             backup_now()
-        except Exception as exc:  # never block startup on a backup failure
+        except Exception as exc:
             app.logger.warning(f"Startup backup failed: {exc}")
     else:
-        app.logger.info("Running on Vercel: skipping disk backup due to read-only container.")
-    try:
-        backup_now()
-    except Exception as exc:  # never block startup on a backup failure
-        app.logger.warning(f"Startup backup failed: {exc}")
+        app.logger.info("Running on Vercel: skipping disk backup.")
 
-    # ------------------------------------------------------------
-    # CORS - only needed for local development, where Vite's dev
-    # server (localhost:5173) and Flask (localhost:5000) run on
-    # different ports. In production the built frontend is served
-    # by this same Flask app, same-origin, so CORS doesn't apply.
-    # ------------------------------------------------------------
+    # CORS configuration
     try:
         from flask_cors import CORS
         CORS(app, supports_credentials=True, origins=CORS_ORIGINS)
     except ImportError:
         pass
 
-    # ------------------------------------------------------------
-    # API routes
-    # ------------------------------------------------------------
+    # Register blueprints
     app.register_blueprint(auth_bp)
     app.register_blueprint(dashboard_bp)
     app.register_blueprint(transactions_bp)
@@ -58,14 +48,23 @@ def create_app():
     app.register_blueprint(reports_bp)
     app.register_blueprint(import_bp)
 
+    # Diagnostic endpoint to verify what seed data Flask loaded
+    @app.route("/api/debug-data")
+    @app.route("/debug-data")
+    def debug_data():
+        from storage import load_data, load_users
+        data = load_data()
+        return jsonify({
+            "current_session_user": session.get("user"),
+            "users_in_file": [u.get("username") for u in load_users().get("users", [])],
+            "data_keys": list(data.keys()),
+            "transaction_counts": {k: len(v.get("transactions", [])) for k, v in data.items()},
+        })
+
     @app.errorhandler(404)
     def not_found(_error):
-        # Let unmatched /api/* calls 404 as JSON...
         return jsonify({"error": "Not found"}), 404
 
-    # ------------------------------------------------------------
-    # Serve the built React app (production / `npm run build`)
-    # ------------------------------------------------------------
     @app.route("/", defaults={"path": ""})
     @app.route("/<path:path>")
     def serve_frontend(path):
@@ -73,19 +72,15 @@ def create_app():
             return jsonify({"error": "Not found"}), 404
 
         full_path = os.path.join(FRONTEND_DIST, path)
-
         if path and os.path.exists(full_path):
             return send_from_directory(FRONTEND_DIST, path)
 
         index_path = os.path.join(FRONTEND_DIST, "index.html")
-
         if os.path.exists(index_path):
             return send_from_directory(FRONTEND_DIST, "index.html")
 
         return (
-            "Frontend build not found. Run `npm run build` inside "
-            "the frontend/ folder, or use `npm run dev` for local "
-            "development instead.",
+            "Frontend build not found.",
             200,
         )
 
