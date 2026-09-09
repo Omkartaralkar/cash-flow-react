@@ -1,9 +1,9 @@
 import { get } from "./api";
 
 export function fetchPeople() {
-  return get("/people");
+  return get("/api/people");
 }
 
 export function fetchPerson(name) {
-  return get(`/people/${encodeURIComponent(name)}`);
+  return get(`/api/people/${encodeURIComponent(name)}`);
 }
