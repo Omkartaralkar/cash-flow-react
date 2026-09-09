@@ -16,8 +16,11 @@ async function parseBody(res) {
 async function request(path, options = {}) {
   const res = await fetch(BASE + path, {
     credentials: "include",
+    cache: "no-store", // Prevents browser and CDN edge caching
     headers: {
       "Content-Type": "application/json",
+      "Cache-Control": "no-cache, no-store, must-revalidate",
+      "Pragma": "no-cache",
       ...(options.headers || {}),
     },
     ...options,
@@ -35,8 +38,21 @@ async function request(path, options = {}) {
   return data;
 }
 
-export function get(path) {
-  return request(path);
+export function get(path, params) {
+  let finalPath = path;
+  if (params && typeof params === "object") {
+    const sp = new URLSearchParams();
+    Object.entries(params).forEach(([k, v]) => {
+      if (v !== undefined && v !== null && v !== "") {
+        sp.set(k, v);
+      }
+    });
+    const qs = sp.toString();
+    if (qs) {
+      finalPath += (finalPath.includes("?") ? "&" : "?") + qs;
+    }
+  }
+  return request(finalPath, { method: "GET" });
 }
 
 export function post(path, body) {
@@ -55,6 +71,11 @@ export async function upload(path, formData) {
   const res = await fetch(BASE + path, {
     method: "POST",
     credentials: "include",
+    cache: "no-store",
+    headers: {
+      "Cache-Control": "no-cache, no-store, must-revalidate",
+      "Pragma": "no-cache",
+    },
     body: formData,
   });
 
