@@ -71,14 +71,57 @@ export default function Transactions() {
 
   const sorted = useMemo(() => {
     const list = Array.isArray(transactions) ? [...transactions] : [];
-    list.sort((a, b) => {
-      if (sortOrder === "newest") return (b.id || 0) - (a.id || 0);
-      if (sortOrder === "oldest") return (a.id || 0) - (b.id || 0);
-      if (sortOrder === "highest") return (b.amount || 0) - (a.amount || 0);
-      if (sortOrder === "lowest") return (a.amount || 0) - (b.amount || 0);
+    if (!list.length) return [];
+
+    // 1. Calculate running balance chronologically across the entire dataset
+    const chrono = [...list].sort((a, b) => {
+      const timeA = new Date(a.date || 0).getTime();
+      const timeB = new Date(b.date || 0).getTime();
+      return timeA - timeB || (a.id || 0) - (b.id || 0);
+    });
+
+    let running = 0;
+    const balanceMap = new Map();
+    chrono.forEach((t) => {
+      const amt = Number(t.amount || 0);
+      if (t.type === "income" || t.type === "return") {
+        running += amt;
+      } else if (t.type === "expense" || t.type === "given") {
+        running -= amt;
+      }
+      balanceMap.set(t.id, running);
+    });
+
+    // 2. Attach the computed running balance to each item
+    const listWithBalance = list.map((t) => ({
+      ...t,
+      balance:
+        t.balance !== undefined && t.balance !== null
+          ? t.balance
+          : balanceMap.get(t.id),
+    }));
+
+    // 3. Sort by actual calendar date (falling back to ID for same-day entries)
+    listWithBalance.sort((a, b) => {
+      const timeA = new Date(a.date || 0).getTime();
+      const timeB = new Date(b.date || 0).getTime();
+
+      if (sortOrder === "newest") {
+        return timeB - timeA || (b.id || 0) - (a.id || 0);
+      }
+      if (sortOrder === "oldest") {
+        return timeA - timeB || (a.id || 0) - (b.id || 0);
+      }
+      if (sortOrder === "highest") {
+        return (b.amount || 0) - (a.amount || 0) || timeB - timeA;
+      }
+      if (sortOrder === "lowest") {
+        return (a.amount || 0) - (b.amount || 0) || timeA - timeB;
+      }
       return 0;
     });
-    return list;
+
+    return listWithBalance;
   }, [transactions, sortOrder]);
 
   const totalPages = Math.max(1, Math.ceil(sorted.length / PAGE_SIZE));
