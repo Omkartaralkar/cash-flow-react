@@ -1,7 +1,7 @@
 Flask
+Flask-Cors
 PyMySQL
 cryptography
-flask-cors
 num2words
 openpyxl
 gunicorn
