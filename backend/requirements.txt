@@ -1,4 +1,6 @@
 Flask
+PyMySQL
+cryptography
 flask-cors
 num2words
 openpyxl
