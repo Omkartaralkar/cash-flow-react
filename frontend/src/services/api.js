@@ -86,7 +86,7 @@ export async function upload(path, formData) {
     const error = new Error(message);
     error.status = res.status;
     throw error;
-  }
+  } 
 
   return data;
 }

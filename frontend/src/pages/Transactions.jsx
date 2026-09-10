@@ -1,305 +1,235 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
-
+import { useEffect, useMemo, useState } from "react";
+import { Link } from "react-router-dom";
 import {
-  fetchTransactions,
-  addTransaction,
-  updateTransaction,
-  deleteTransaction,
-} from "../services/transactionService";
+  ResponsiveContainer,
+  AreaChart,
+  Area,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  BarChart,
+  Bar,
+  Legend,
+} from "recharts";
+
+import { fetchDashboard } from "../services/dashboardService";
+import { fetchReports } from "../services/reportService";
+import BalanceCard from "../components/BalanceCard";
+import SummaryCard from "../components/SummaryCard";
 import TransactionTable from "../components/TransactionTable";
-import TransactionForm from "../components/TransactionForm";
-import Modal, { ConfirmDialog } from "../components/Modal";
+import PersonCard from "../components/PersonCard";
 import Loading from "../components/Loading";
 import EmptyState from "../components/EmptyState";
-import { useToast } from "../hooks/useToast";
+import { monthLabel } from "../utils/format";
 
-const PAGE_SIZE = 15;
-
-export default function Transactions() {
-  const { showToast } = useToast();
-
-  const [transactions, setTransactions] = useState([]);
+export default function Dashboard() {
+  const [dashboard, setDashboard] = useState(null);
+  const [monthly, setMonthly] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  const [search, setSearch] = useState("");
-  const [typeFilter, setTypeFilter] = useState("");
-  const [dateFrom, setDateFrom] = useState("");
-  const [dateTo, setDateTo] = useState("");
-  const [sortOrder, setSortOrder] = useState("newest");
-  const [page, setPage] = useState(1);
+  useEffect(() => {
+    let alive = true;
 
-  const [modalOpen, setModalOpen] = useState(false);
-  const [editing, setEditing] = useState(null);
-  const [deleting, setDeleting] = useState(null);
+    async function load() {
+      setLoading(true);
+      setError("");
+      try {
+        const [dashboardData, reportsData] = await Promise.all([
+          fetchDashboard(),
+          fetchReports(),
+        ]);
 
-  const load = useCallback(async () => {
-    setLoading(true);
-    setError("");
-    try {
-      const data = await fetchTransactions({
-        type: typeFilter,
-        from: dateFrom,
-        to: dateTo,
-        q: search,
-      });
+        if (!alive) return;
 
-      if (data && Array.isArray(data.transactions)) {
-        setTransactions(data.transactions);
-      } else if (data && data.error) {
-        setError(data.error);
-        setTransactions([]);
-      } else {
-        setTransactions([]);
+        setDashboard(dashboardData || null);
+        setMonthly(reportsData && reportsData.monthly ? reportsData.monthly : []);
+      } catch (err) {
+        if (alive) setError(err.message || "Could not load the dashboard.");
+      } finally {
+        if (alive) setLoading(false);
       }
-    } catch (err) {
-      setError(err.message || "Could not load transactions.");
-      setTransactions([]);
-    } finally {
-      setLoading(false);
     }
-  }, [typeFilter, dateFrom, dateTo, search]);
 
-  useEffect(() => {
-    const t = window.setTimeout(load, 250); // debounce search
-    return () => window.clearTimeout(t);
-  }, [load]);
+    load();
+    return () => {
+      alive = false;
+    };
+  }, []);
 
-  useEffect(() => {
-    setPage(1);
-  }, [search, typeFilter, dateFrom, dateTo, sortOrder]);
+  const rawTransactions = Array.isArray(dashboard?.transactions)
+    ? dashboard.transactions
+    : [];
 
-  const sorted = useMemo(() => {
-    const list = Array.isArray(transactions) ? [...transactions] : [];
-    if (!list.length) return [];
-
-    // 1. Calculate running balance chronologically across the entire dataset
-    const chrono = [...list].sort((a, b) => {
-      const timeA = new Date(a.date || 0).getTime();
-      const timeB = new Date(b.date || 0).getTime();
-      return timeA - timeB || (a.id || 0) - (b.id || 0);
-    });
-
-    let running = 0;
-    const balanceMap = new Map();
-    chrono.forEach((t) => {
-      const amt = Number(t.amount || 0);
-      if (t.type === "income" || t.type === "return") {
-        running += amt;
-      } else if (t.type === "expense" || t.type === "given") {
-        running -= amt;
-      }
-      balanceMap.set(t.id, running);
-    });
-
-    // 2. Attach the computed running balance to each item
-    const listWithBalance = list.map((t) => ({
-      ...t,
-      balance:
-        t.balance !== undefined && t.balance !== null
-          ? t.balance
-          : balanceMap.get(t.id),
-    }));
-
-    // 3. Sort by actual calendar date (falling back to ID for same-day entries)
-    listWithBalance.sort((a, b) => {
-      const timeA = new Date(a.date || 0).getTime();
-      const timeB = new Date(b.date || 0).getTime();
-
-      if (sortOrder === "newest") {
+  // Sort strictly by calendar date (newest date first, tie-break by ID)
+  const recent = useMemo(() => {
+    return [...rawTransactions]
+      .sort((a, b) => {
+        const timeA = new Date(a.date || 0).getTime();
+        const timeB = new Date(b.date || 0).getTime();
         return timeB - timeA || (b.id || 0) - (a.id || 0);
-      }
-      if (sortOrder === "oldest") {
-        return timeA - timeB || (a.id || 0) - (b.id || 0);
-      }
-      if (sortOrder === "highest") {
-        return (b.amount || 0) - (a.amount || 0) || timeB - timeA;
-      }
-      if (sortOrder === "lowest") {
-        return (a.amount || 0) - (b.amount || 0) || timeA - timeB;
-      }
-      return 0;
-    });
+      })
+      .slice(0, 8);
+  }, [rawTransactions]);
 
-    return listWithBalance;
-  }, [transactions, sortOrder]);
+  if (loading) return <Loading label="Loading your dashboard…" />;
+  if (error) return <EmptyState title="Couldn't load dashboard" description={error} />;
+  if (!dashboard) return null;
 
-  const totalPages = Math.max(1, Math.ceil(sorted.length / PAGE_SIZE));
-  const pageItems = sorted.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+  const peopleEntries = Object.entries(dashboard.people || {}).slice(0, 4);
+  const safeMonthly = Array.isArray(monthly) ? monthly : [];
 
-  function openAdd() {
-    setEditing(null);
-    setModalOpen(true);
-  }
+  const chartData = safeMonthly.map((m) => ({
+    month: monthLabel(m.month),
+    Income: m.income || 0,
+    Expense: m.expense || 0,
+  }));
 
-  function openEdit(transaction) {
-    setEditing(transaction);
-    setModalOpen(true);
-  }
+  const givenReturnedData = safeMonthly.map((m) => ({
+    month: monthLabel(m.month),
+    Given: m.given || 0,
+    Returned: m.returned || 0,
+  }));
 
-  async function handleSubmit(payload) {
-    try {
-      if (editing) {
-        await updateTransaction(editing.id, payload);
-        showToast("Transaction updated.");
-      } else {
-        await addTransaction(payload);
-        showToast("Transaction added.");
-      }
-      setModalOpen(false);
-      setEditing(null);
-      load();
-    } catch (err) {
-      showToast(err.message || "Operation failed.", "error");
-    }
-  }
-
-  async function confirmDelete() {
-    if (!deleting) return;
-    try {
-      await deleteTransaction(deleting.id);
-      showToast("Transaction deleted.");
-      setDeleting(null);
-      load();
-    } catch (err) {
-      showToast(err.message || "Could not delete.", "error");
-    }
-  }
+  const totals = dashboard.totals || {
+    income: { formatted: "₹0", words: "Zero" },
+    expense: { formatted: "₹0", words: "Zero" },
+    given: { formatted: "₹0", words: "Zero" },
+    returned: { formatted: "₹0", words: "Zero" },
+    current_given: { formatted: "₹0", words: "Zero" },
+  };
 
   return (
-    <div className="page">
-      <div className="page__header">
-        <div>
-          <h1>Transactions</h1>
-          <p className="page__subtitle">Every income, expense, given and returned entry.</p>
+    <div className="page dashboard-page">
+      <div className="dashboard-grid">
+        <BalanceCard balance={dashboard.balance || { formatted: "₹0", words: "Zero" }} />
+
+        <div className="summary-grid">
+          <SummaryCard label="Income" money={totals.income} tone="positive" icon="↓" />
+          <SummaryCard label="Expense" money={totals.expense} tone="negative" icon="↑" />
+          <SummaryCard label="Given" money={totals.given} tone="negative" icon="→" />
+          <SummaryCard label="Returned" money={totals.returned} tone="positive" icon="←" />
+          <SummaryCard
+            label="Outstanding"
+            money={totals.current_given}
+            tone="neutral"
+            icon="●"
+          />
         </div>
-        <button type="button" className="btn btn--primary" onClick={openAdd}>
-          Add transaction
-        </button>
       </div>
 
-      <div className="filter-bar">
-        <input
-          id="transactions-search"
-          name="search"
-          type="search"
-          placeholder="Search name, reason…"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="filter-bar__search"
-        />
+      <div className="chart-grid">
+        <div className="card chart-card">
+          <div className="card__header">
+            <h2>Income vs expense</h2>
+            <span className="card__hint">Last {chartData.length} months</span>
+          </div>
+          {chartData.length === 0 ? (
+            <EmptyState title="Not enough data yet" />
+          ) : (
+            <ResponsiveContainer width="100%" height={220}>
+              <AreaChart data={chartData}>
+                <defs>
+                  <linearGradient id="incomeGradient" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="var(--positive)" stopOpacity={0.35} />
+                    <stop offset="100%" stopColor="var(--positive)" stopOpacity={0} />
+                  </linearGradient>
+                  <linearGradient id="expenseGradient" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="var(--negative)" stopOpacity={0.3} />
+                    <stop offset="100%" stopColor="var(--negative)" stopOpacity={0} />
+                  </linearGradient>
+                </defs>
+                <CartesianGrid strokeDasharray="3 6" stroke="var(--border)" vertical={false} />
+                <XAxis dataKey="month" tick={{ fontSize: 12 }} stroke="var(--text-muted)" />
+                <YAxis tick={{ fontSize: 12 }} stroke="var(--text-muted)" width={40} />
+                <Tooltip
+                  contentStyle={{
+                    background: "var(--surface)",
+                    border: "1px solid var(--border)",
+                    borderRadius: 10,
+                    fontSize: 13,
+                  }}
+                />
+                <Area
+                  type="monotone"
+                  dataKey="Income"
+                  stroke="var(--positive)"
+                  fill="url(#incomeGradient)"
+                  strokeWidth={2}
+                />
+                <Area
+                  type="monotone"
+                  dataKey="Expense"
+                  stroke="var(--negative)"
+                  fill="url(#expenseGradient)"
+                  strokeWidth={2}
+                />
+              </AreaChart>
+            </ResponsiveContainer>
+          )}
+        </div>
 
-        <select
-          id="transactions-type-filter"
-          name="typeFilter"
-          value={typeFilter}
-          onChange={(e) => setTypeFilter(e.target.value)}
-        >
-          <option value="">All types</option>
-          <option value="income">Income</option>
-          <option value="expense">Expense</option>
-          <option value="given">Given</option>
-          <option value="return">Returned</option>
-        </select>
-
-        <input
-          id="transactions-date-from"
-          name="dateFrom"
-          type="date"
-          value={dateFrom}
-          onChange={(e) => setDateFrom(e.target.value)}
-          aria-label="From date"
-        />
-        <input
-          id="transactions-date-to"
-          name="dateTo"
-          type="date"
-          value={dateTo}
-          onChange={(e) => setDateTo(e.target.value)}
-          aria-label="To date"
-        />
-
-        <select
-          id="transactions-sort-order"
-          name="sortOrder"
-          value={sortOrder}
-          onChange={(e) => setSortOrder(e.target.value)}
-        >
-          <option value="newest">Newest first</option>
-          <option value="oldest">Oldest first</option>
-          <option value="highest">Highest amount</option>
-          <option value="lowest">Lowest amount</option>
-        </select>
+        <div className="card chart-card">
+          <div className="card__header">
+            <h2>Given vs returned</h2>
+            <span className="card__hint">By month</span>
+          </div>
+          {givenReturnedData.length === 0 ? (
+            <EmptyState title="Not enough data yet" />
+          ) : (
+            <ResponsiveContainer width="100%" height={220}>
+              <BarChart data={givenReturnedData}>
+                <CartesianGrid strokeDasharray="3 6" stroke="var(--border)" vertical={false} />
+                <XAxis dataKey="month" tick={{ fontSize: 12 }} stroke="var(--text-muted)" />
+                <YAxis tick={{ fontSize: 12 }} stroke="var(--text-muted)" width={40} />
+                <Tooltip
+                  contentStyle={{
+                    background: "var(--surface)",
+                    border: "1px solid var(--border)",
+                    borderRadius: 10,
+                    fontSize: 13,
+                  }}
+                />
+                <Legend wrapperStyle={{ fontSize: 12 }} />
+                <Bar dataKey="Given" fill="var(--negative)" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="Returned" fill="var(--positive)" radius={[4, 4, 0, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
+          )}
+        </div>
       </div>
 
       <div className="card">
-        {loading ? (
-          <Loading />
-        ) : error ? (
-          <EmptyState title="Couldn't load transactions" description={error} />
+        <div className="card__header">
+          <h2>People with outstanding money</h2>
+          <Link to="/people" className="card__link">
+            View all
+          </Link>
+        </div>
+        {peopleEntries.length === 0 ? (
+          <EmptyState
+            title="No outstanding balances"
+            description="Record a 'Given' transaction to start tracking."
+          />
         ) : (
-          <>
-            <TransactionTable
-              transactions={pageItems}
-              onEdit={openEdit}
-              onDelete={setDeleting}
-            />
-            {sorted.length > PAGE_SIZE && (
-              <div className="pagination">
-                <button
-                  type="button"
-                  className="btn btn--ghost btn--sm"
-                  disabled={page === 1}
-                  onClick={() => setPage((p) => Math.max(1, p - 1))}
-                >
-                  Previous
-                </button>
-                <span>
-                  Page {page} of {totalPages}
-                </span>
-                <button
-                  type="button"
-                  className="btn btn--ghost btn--sm"
-                  disabled={page === totalPages}
-                  onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-                >
-                  Next
-                </button>
-              </div>
-            )}
-          </>
+          <div className="people-grid">
+            {peopleEntries.map(([name, person]) => (
+              <PersonCard key={name} name={name} person={person} />
+            ))}
+          </div>
         )}
       </div>
 
-      <Modal
-        open={modalOpen}
-        onClose={() => setModalOpen(false)}
-        title={editing ? "Edit transaction" : "Add transaction"}
-      >
-        <TransactionForm
-          type="any"
-          initial={editing || { type: "income" }}
-          submitLabel={editing ? "Save changes" : "Add transaction"}
-          onSubmit={handleSubmit}
-          onCancel={() => setModalOpen(false)}
-        />
-      </Modal>
-
-      <ConfirmDialog
-        open={Boolean(deleting)}
-        title="Delete this transaction?"
-        message={
-          deleting
-            ? `This will permanently remove the ${deleting.type} entry of ₹${deleting.amount?.toLocaleString(
-                "en-IN"
-              )} dated ${deleting.date}.`
-            : ""
-        }
-        confirmLabel="Delete"
-        danger
-        onConfirm={confirmDelete}
-        onCancel={() => setDeleting(null)}
-      />
+      <div className="card">
+        <div className="card__header">
+          <h2>Recent transactions</h2>
+          <Link to="/transactions" className="card__link">
+            View all
+          </Link>
+        </div>
+        <TransactionTable transactions={recent} compact />
+      </div>
     </div>
   );
 }

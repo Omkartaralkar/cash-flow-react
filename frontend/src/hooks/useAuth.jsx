@@ -22,7 +22,12 @@ export function AuthProvider({ children }) {
   const refresh = useCallback(async () => {
     try {
       const data = await fetchSession();
-      setUser(data.authenticated ? data.username : null);
+      // Only authenticate if authenticated is strictly true and a username exists
+      if (data && data.authenticated === true && data.username) {
+        setUser(data.username);
+      } else {
+        setUser(null);
+      }
     } catch {
       setUser(null);
     } finally {
@@ -36,7 +41,7 @@ export function AuthProvider({ children }) {
 
   const login = useCallback(async (username, password) => {
     const data = await loginRequest(username, password);
-    setUser(data.username);
+    setUser(data?.username || username);
     return data;
   }, []);
 
@@ -45,8 +50,11 @@ export function AuthProvider({ children }) {
   }, []);
 
   const logout = useCallback(async () => {
-    await logoutRequest();
-    setUser(null);
+    try {
+      await logoutRequest();
+    } finally {
+      setUser(null);
+    }
   }, []);
 
   return (
