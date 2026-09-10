@@ -10,7 +10,7 @@ export default function Transactions() {
   const [error, setError] = useState("");
   const [formOpen, setFormOpen] = useState(false);
 
-  // Form State
+  // Form fields
   const [type, setType] = useState("income");
   const [amount, setAmount] = useState("");
   const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
@@ -84,47 +84,105 @@ export default function Transactions() {
 
   return (
     <div className="page transactions-page">
-      <div className="page__header" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.5rem" }}>
-        <h1>Transactions</h1>
-        <button className="btn btn--primary" onClick={() => setFormOpen((prev) => !prev)}>
-          {formOpen ? "Cancel" : "+ Add Transaction"}
-        </button>
-      </div>
+      <div className="card" style={{ marginBottom: "1.5rem" }}>
+        <div className="card__header" style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+          <div>
+            <h2>Transactions</h2>
+            <span className="card__hint">{sortedTransactions.length} records</span>
+          </div>
+          <button 
+            type="button" 
+            className="btn btn--primary" 
+            onClick={() => setFormOpen((prev) => !prev)}
+          >
+            {formOpen ? "Cancel" : "+ Add Transaction"}
+          </button>
+        </div>
 
-      {formOpen && (
-        <form onSubmit={handleSubmit} className="card" style={{ marginBottom: "1.5rem", display: "grid", gap: "1rem", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))" }}>
-          <div>
-            <label>Type</label>
-            <select value={type} onChange={(e) => setType(e.target.value)}>
-              <option value="income">Income</option>
-              <option value="expense">Expense</option>
-              <option value="given">Given</option>
-              <option value="returned">Returned</option>
-            </select>
-          </div>
-          <div>
-            <label>Amount (₹)</label>
-            <input type="number" step="any" required value={amount} onChange={(e) => setAmount(e.target.value)} placeholder="0.00" />
-          </div>
-          <div>
-            <label>Date</label>
-            <input type="date" required value={date} onChange={(e) => setDate(e.target.value)} />
-          </div>
-          <div>
-            <label>Person (Optional)</label>
-            <input type="text" value={person} onChange={(e) => setPerson(e.target.value)} placeholder="e.g. Rudved" />
-          </div>
-          <div>
-            <label>Reason / Note</label>
-            <input type="text" value={reason} onChange={(e) => setReason(e.target.value)} placeholder="e.g. Office work" />
-          </div>
-          <div style={{ display: "flex", alignItems: "flex-end" }}>
-            <button type="submit" disabled={submitting} className="btn btn--primary" style={{ width: "100%" }}>
-              {submitting ? "Saving…" : "Save"}
-            </button>
-          </div>
-        </form>
-      )}
+        {formOpen && (
+          <form onSubmit={handleSubmit} style={{ marginTop: "1.5rem", borderTop: "1px solid var(--border)", paddingTop: "1.5rem" }}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "1rem", marginBottom: "1.25rem" }}>
+              
+              <div style={{ display: "flex", flexDirection: "column", gap: "0.4rem" }}>
+                <label style={{ fontSize: "0.85rem", fontWeight: 600, color: "var(--text-muted)" }}>Type</label>
+                <select 
+                  value={type} 
+                  onChange={(e) => setType(e.target.value)}
+                  style={{ padding: "0.6rem 0.8rem", borderRadius: "8px", border: "1px solid var(--border)", background: "var(--surface)", color: "var(--text)" }}
+                >
+                  <option value="income">Income</option>
+                  <option value="expense">Expense</option>
+                  <option value="given">Given</option>
+                  <option value="returned">Returned</option>
+                </select>
+              </div>
+
+              <div style={{ display: "flex", flexDirection: "column", gap: "0.4rem" }}>
+                <label style={{ fontSize: "0.85rem", fontWeight: 600, color: "var(--text-muted)" }}>Amount (₹)</label>
+                <input 
+                  type="number" 
+                  step="any" 
+                  required 
+                  value={amount} 
+                  onChange={(e) => setAmount(e.target.value)} 
+                  placeholder="0.00" 
+                  style={{ padding: "0.6rem 0.8rem", borderRadius: "8px", border: "1px solid var(--border)", background: "var(--surface)", color: "var(--text)" }}
+                />
+              </div>
+
+              <div style={{ display: "flex", flexDirection: "column", gap: "0.4rem" }}>
+                <label style={{ fontSize: "0.85rem", fontWeight: 600, color: "var(--text-muted)" }}>Date</label>
+                <input 
+                  type="date" 
+                  required 
+                  value={date} 
+                  onChange={(e) => setDate(e.target.value)} 
+                  style={{ padding: "0.6rem 0.8rem", borderRadius: "8px", border: "1px solid var(--border)", background: "var(--surface)", color: "var(--text)" }}
+                />
+              </div>
+
+              <div style={{ display: "flex", flexDirection: "column", gap: "0.4rem" }}>
+                <label style={{ fontSize: "0.85rem", fontWeight: 600, color: "var(--text-muted)" }}>Person (Optional)</label>
+                <input 
+                  type="text" 
+                  value={person} 
+                  onChange={(e) => setPerson(e.target.value)} 
+                  placeholder="e.g. Rudved" 
+                  style={{ padding: "0.6rem 0.8rem", borderRadius: "8px", border: "1px solid var(--border)", background: "var(--surface)", color: "var(--text)" }}
+                />
+              </div>
+
+              <div style={{ display: "flex", flexDirection: "column", gap: "0.4rem" }}>
+                <label style={{ fontSize: "0.85rem", fontWeight: 600, color: "var(--text-muted)" }}>Reason / Note</label>
+                <input 
+                  type="text" 
+                  value={reason} 
+                  onChange={(e) => setReason(e.target.value)} 
+                  placeholder="e.g. Office Work" 
+                  style={{ padding: "0.6rem 0.8rem", borderRadius: "8px", border: "1px solid var(--border)", background: "var(--surface)", color: "var(--text)" }}
+                />
+              </div>
+            </div>
+
+            <div style={{ display: "flex", justifyContent: "flex-end", gap: "0.75rem" }}>
+              <button 
+                type="button" 
+                className="btn btn--ghost" 
+                onClick={() => setFormOpen(false)}
+              >
+                Cancel
+              </button>
+              <button 
+                type="submit" 
+                disabled={submitting} 
+                className="btn btn--primary"
+              >
+                {submitting ? "Saving…" : "Save Transaction"}
+              </button>
+            </div>
+          </form>
+        )}
+      </div>
 
       <div className="card">
         {sortedTransactions.length === 0 ? (
