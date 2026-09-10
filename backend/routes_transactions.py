@@ -77,8 +77,8 @@ def list_transactions():
 def add_transaction():
     payload = request.get_json(silent=True) or {}
 
-    name = str(payload.get("name", "")).strip()
-    reason = str(payload.get("reason", "")).strip()
+    name = str(payload.get("name", payload.get("person", ""))).strip()
+    reason = str(payload.get("reason", payload.get("category", ""))).strip()
 
     if not validate_name_reason(name, reason):
         return jsonify(
@@ -90,7 +90,11 @@ def add_transaction():
     except (ValueError, TypeError):
         return jsonify({"error": "Please enter a valid amount."}), 400
 
-    transaction_type = normalize_type(payload.get("type", ""))
+    raw_type = str(payload.get("type", "")).strip().lower()
+    if raw_type == "returned":
+        raw_type = "return"
+
+    transaction_type = normalize_type(raw_type)
     if transaction_type not in VALID_TYPES:
         return jsonify({"error": "Please choose a transaction type."}), 400
 
@@ -115,37 +119,47 @@ def add_transaction():
     return jsonify({"ok": True, "id": new_id}), 201
 
 
-@transactions_bp.route("/transactions/<int:transaction_id>", methods=["GET"])
-@transactions_bp.route("/api/transactions/<int:transaction_id>", methods=["GET"])
+@transactions_bp.route("/transactions/<string:transaction_id>", methods=["GET"])
+@transactions_bp.route("/api/transactions/<string:transaction_id>", methods=["GET"])
 @login_required
 def get_transaction(transaction_id):
+    try:
+        idx = int(transaction_id)
+    except ValueError:
+        return jsonify({"error": "Invalid transaction ID."}), 400
+
     data = load_data()
     transactions = current_transactions(data)
 
-    if transaction_id < 0 or transaction_id >= len(transactions):
+    if idx < 0 or idx >= len(transactions):
         return jsonify({"error": "Transaction not found."}), 404
 
-    transaction = normalize_transaction(transactions[transaction_id])
-    transaction["id"] = transaction_id
+    transaction = normalize_transaction(transactions[idx])
+    transaction["id"] = idx
 
     return jsonify(transaction)
 
 
-@transactions_bp.route("/transactions/<int:transaction_id>", methods=["PUT"])
-@transactions_bp.route("/api/transactions/<int:transaction_id>", methods=["PUT"])
+@transactions_bp.route("/transactions/<string:transaction_id>", methods=["PUT"])
+@transactions_bp.route("/api/transactions/<string:transaction_id>", methods=["PUT"])
 @login_required
 def update_transaction(transaction_id):
+    try:
+        idx = int(transaction_id)
+    except ValueError:
+        return jsonify({"error": "Invalid transaction ID."}), 400
+
     data = load_data()
     transactions = current_transactions(data)
 
-    if transaction_id < 0 or transaction_id >= len(transactions):
+    if idx < 0 or idx >= len(transactions):
         return jsonify({"error": "Transaction not found."}), 404
 
-    transaction = normalize_transaction(transactions[transaction_id])
+    transaction = normalize_transaction(transactions[idx])
     payload = request.get_json(silent=True) or {}
 
-    name = str(payload.get("name", "")).strip()
-    reason = str(payload.get("reason", "")).strip()
+    name = str(payload.get("name", payload.get("person", ""))).strip()
+    reason = str(payload.get("reason", payload.get("category", ""))).strip()
 
     if not validate_name_reason(name, reason):
         return jsonify(
@@ -157,9 +171,11 @@ def update_transaction(transaction_id):
     except (ValueError, TypeError):
         return jsonify({"error": "Please enter a valid amount."}), 400
 
-    transaction_type = normalize_type(
-        payload.get("type", transaction.get("type", ""))
-    )
+    raw_type = str(payload.get("type", transaction.get("type", ""))).strip().lower()
+    if raw_type == "returned":
+        raw_type = "return"
+
+    transaction_type = normalize_type(raw_type)
     if transaction_type not in VALID_TYPES:
         return jsonify({"error": "Please choose a transaction type."}), 400
 
@@ -171,23 +187,31 @@ def update_transaction(transaction_id):
     transaction["category"] = reason
     transaction["date"] = payload.get("date") or transaction.get("date", "")
 
-    transactions[transaction_id] = transaction
+    transactions[idx] = transaction
     save_data(data)
 
-    return jsonify({"ok": True, "id": transaction_id})
+    return jsonify({"ok": True, "id": idx})
 
 
-@transactions_bp.route("/transactions/<int:transaction_id>", methods=["DELETE"])
-@transactions_bp.route("/api/transactions/<int:transaction_id>", methods=["DELETE"])
+@transactions_bp.route("/transactions/<string:transaction_id>", methods=["DELETE"])
+@transactions_bp.route("/api/transactions/<string:transaction_id>", methods=["DELETE"])
 @login_required
 def delete_transaction(transaction_id):
+    if str(transaction_id).startswith("temp-"):
+        return jsonify({"ok": True})
+
+    try:
+        idx = int(transaction_id)
+    except ValueError:
+        return jsonify({"error": "Invalid transaction ID."}), 400
+
     data = load_data()
     transactions = current_transactions(data)
 
-    if transaction_id < 0 or transaction_id >= len(transactions):
+    if idx < 0 or idx >= len(transactions):
         return jsonify({"error": "Transaction not found."}), 404
 
-    transactions.pop(transaction_id)
+    transactions.pop(idx)
     save_data(data)
 
     return jsonify({"ok": True})
