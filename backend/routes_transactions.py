@@ -123,19 +123,29 @@ def add_transaction():
 @transactions_bp.route("/api/transactions/<string:transaction_id>", methods=["GET"])
 @login_required
 def get_transaction(transaction_id):
-    try:
-        idx = int(transaction_id)
-    except ValueError:
-        return jsonify({"error": "Invalid transaction ID."}), 400
-
+    tid_str = str(transaction_id).strip()
     data = load_data()
     transactions = current_transactions(data)
 
-    if idx < 0 or idx >= len(transactions):
+    target_idx = None
+    for i, t in enumerate(transactions):
+        if str(t.get("id")) == tid_str:
+            target_idx = i
+            break
+
+    if target_idx is None:
+        try:
+            idx = int(tid_str)
+            if 0 <= idx < len(transactions):
+                target_idx = idx
+        except ValueError:
+            pass
+
+    if target_idx is None:
         return jsonify({"error": "Transaction not found."}), 404
 
-    transaction = normalize_transaction(transactions[idx])
-    transaction["id"] = idx
+    transaction = normalize_transaction(transactions[target_idx])
+    transaction["id"] = target_idx
 
     return jsonify(transaction)
 
@@ -144,18 +154,28 @@ def get_transaction(transaction_id):
 @transactions_bp.route("/api/transactions/<string:transaction_id>", methods=["PUT"])
 @login_required
 def update_transaction(transaction_id):
-    try:
-        idx = int(transaction_id)
-    except ValueError:
-        return jsonify({"error": "Invalid transaction ID."}), 400
-
+    tid_str = str(transaction_id).strip()
     data = load_data()
     transactions = current_transactions(data)
 
-    if idx < 0 or idx >= len(transactions):
+    target_idx = None
+    for i, t in enumerate(transactions):
+        if str(t.get("id")) == tid_str:
+            target_idx = i
+            break
+
+    if target_idx is None:
+        try:
+            idx = int(tid_str)
+            if 0 <= idx < len(transactions):
+                target_idx = idx
+        except ValueError:
+            pass
+
+    if target_idx is None:
         return jsonify({"error": "Transaction not found."}), 404
 
-    transaction = normalize_transaction(transactions[idx])
+    transaction = normalize_transaction(transactions[target_idx])
     payload = request.get_json(silent=True) or {}
 
     name = str(payload.get("name", payload.get("person", ""))).strip()
@@ -187,31 +207,44 @@ def update_transaction(transaction_id):
     transaction["category"] = reason
     transaction["date"] = payload.get("date") or transaction.get("date", "")
 
-    transactions[idx] = transaction
+    transactions[target_idx] = transaction
     save_data(data)
 
-    return jsonify({"ok": True, "id": idx})
+    return jsonify({"ok": True, "id": target_idx})
 
 
 @transactions_bp.route("/transactions/<string:transaction_id>", methods=["DELETE"])
 @transactions_bp.route("/api/transactions/<string:transaction_id>", methods=["DELETE"])
 @login_required
 def delete_transaction(transaction_id):
-    if str(transaction_id).startswith("temp-"):
+    tid_str = str(transaction_id).strip()
+    if tid_str.startswith("temp-"):
         return jsonify({"ok": True})
-
-    try:
-        idx = int(transaction_id)
-    except ValueError:
-        return jsonify({"error": "Invalid transaction ID."}), 400
 
     data = load_data()
     transactions = current_transactions(data)
 
-    if idx < 0 or idx >= len(transactions):
+    target_idx = None
+
+    # 1. Match by transaction 'id' attribute
+    for i, t in enumerate(transactions):
+        if str(t.get("id")) == tid_str:
+            target_idx = i
+            break
+
+    # 2. Fallback: match by list index
+    if target_idx is None:
+        try:
+            idx = int(tid_str)
+            if 0 <= idx < len(transactions):
+                target_idx = idx
+        except ValueError:
+            pass
+
+    if target_idx is None:
         return jsonify({"error": "Transaction not found."}), 404
 
-    transactions.pop(idx)
+    transactions.pop(target_idx)
     save_data(data)
 
     return jsonify({"ok": True})
