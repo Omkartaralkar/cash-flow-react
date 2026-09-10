@@ -226,13 +226,13 @@ def delete_transaction(transaction_id):
 
     target_idx = None
 
-    # 1. Match by transaction 'id' attribute
+    # Match by transaction 'id' property
     for i, t in enumerate(transactions):
         if str(t.get("id")) == tid_str:
             target_idx = i
             break
 
-    # 2. Fallback: match by list index
+    # Fallback to integer list index
     if target_idx is None:
         try:
             idx = int(tid_str)

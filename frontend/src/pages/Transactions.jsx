@@ -48,32 +48,55 @@ export default function Transactions() {
     e.preventDefault();
     if (!amount || isNaN(amount) || Number(amount) <= 0) return;
 
+    const parsedAmount = parseFloat(amount);
+    const tempId = "temp-" + Date.now();
+    const payload = {
+      id: tempId,
+      type: type.toLowerCase() === "returned" ? "return" : type.toLowerCase(),
+      amount: parsedAmount,
+      date: date,
+      person: person.trim() || "",
+      name: person.trim() || "",
+      reason: reason.trim() || "",
+      category: reason.trim() || "",
+    };
+
+    // Optimistic UI update
+    setTransactions((prev) => [payload, ...prev]);
+    setAmount("");
+    setPerson("");
+    setReason("");
+    setFormOpen(false);
+
     setSubmitting(true);
     try {
-      await addTransaction({
-        type,
-        amount: parseFloat(amount),
-        date,
-        person: person.trim() || null,
-        reason: reason.trim() || "",
-      });
-      setAmount("");
-      setPerson("");
-      setReason("");
-      setFormOpen(false);
+      await addTransaction(payload);
       await loadData();
     } catch (err) {
-      alert(err.message || "Could not add transaction");
+      alert("Failed to save transaction: " + (err.message || "Unknown error"));
+      setTransactions((prev) => prev.filter((t) => (t.id ?? t._id) !== tempId));
+      setFormOpen(true);
     } finally {
       setSubmitting(false);
     }
   }
 
-  async function handleDelete(id) {
+  async function handleDelete(target) {
     if (!window.confirm("Are you sure you want to delete this transaction?")) return;
+
+    // Defensively resolve scalar ID if an object was passed
+    const id = typeof target === "object" && target !== null 
+      ? (target.id ?? target._id ?? target.index) 
+      : target;
+
+    if (id === undefined || id === null || id === "" || id === "[object Object]") {
+      alert("Invalid transaction identifier.");
+      return;
+    }
+
     try {
       await deleteTransaction(id);
-      setTransactions((prev) => prev.filter((t) => t.id !== id));
+      setTransactions((prev) => prev.filter((t) => (t.id ?? t._id) !== id));
     } catch (err) {
       alert(err.message || "Failed to delete transaction");
     }
